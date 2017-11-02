@@ -1,0 +1,8 @@
+setup.py
+stretch/__init__.py
+stretch/stretch.py
+wallpaperkiller.egg-info/PKG-INFO
+wallpaperkiller.egg-info/SOURCES.txt
+wallpaperkiller.egg-info/dependency_links.txt
+wallpaperkiller.egg-info/requires.txt
+wallpaperkiller.egg-info/top_level.txt
