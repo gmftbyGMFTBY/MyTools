@@ -41,14 +41,6 @@ void cd(char* argv)
     }
 }
 
-void echo(int argc, char* argv[])
-{
-    // the simple echo for the users
-    // get the env value for the user
-    // the system call is the [getenv(env_name)], return the char* for print
-
-}
-
 void touch(int argc, char* argv[], int acc, int modifaction)
 {
     // touch command try to change the file's timestamps, use current timestamps
@@ -483,6 +475,8 @@ void help()
     printf(ANSI_COLOR_RED "  1.  cd      - change dir\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "  2.  ls      - list the path\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "      * -l: show more message\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "      * -lu: show access message\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "      * -lc: show state modifaction message\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "  3.  pwd     - show current path\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "  4.  rm      - remove the file or dir\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "      * -r: recursive remove the directory\n" ANSI_COLOR_RESET);
@@ -495,6 +489,11 @@ void help()
     printf(ANSI_COLOR_RED "  8.  exit    - exit the termianl\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "  9.  history - show the command history\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "  10. cat     - show the content of the file\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "  11. touch   - create or change the tiemstamps\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "      * -a: create or change access timestamps\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "      * -m: create or chaneg modifaction timestamps\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "  12. time    - count the time of the commands\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "  13. cat     - get the file context to the stdout\n" ANSI_COLOR_RESET);
     return ;
 }
 
@@ -610,6 +609,10 @@ int main(int argc, char* argv[])
         }
         else if (strcmp(para[0], "time") == 0) {
             mtime(argc, para);
+        }
+        else if (strcmp(para[0], 'j') == 0) {
+            // the autojump extension of this ltsh
+            myjump(argc, para);
         }
         else if (strcmp(para[0], "exit") == 0) exit(0);
         else {
