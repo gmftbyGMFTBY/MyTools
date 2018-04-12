@@ -1,0 +1,286 @@
+  1	ls
+  2	cd test
+  3	ls
+  4	history
+  5	ls
+  6	
+  7	ls
+  8	ls
+  9	cd ..
+  10	ls
+  11	cd test
+  12	ls
+  13	ls -l
+  14	cd a
+  15	ls
+  16	mv 4 ../b/something
+  17	cd ..
+  18	cd b
+  19	ls
+  20	ls
+  21	
+  22	ls
+  23	cd ..
+  24	ls
+  25	cd a
+  26	ls
+  27	ls
+  28	cd .
+  29	cd ..
+  30	ls
+  31	cd b
+  32	ls
+  33	cp 4 ../a/
+  34	cd ../a
+  35	ls
+  36	
+  37	
+  38	
+  39	ls
+  40	cd ..
+  41	ls
+  42	cd b
+  43	ls
+  44	mv 2 ../a
+  45	cd ../a
+  46	ls
+  47	ls -l
+  48	
+  49	cd ..
+  50	ls
+  51	cd ..
+  52	ls
+  53	cd test
+  54	ls
+  55	ls -l
+  56	cd b
+  57	ls
+  58	ls -l
+  59	cp haha ./
+  60	cd ..
+  61	ls
+  62	
+  63	ls
+  64	cd ..
+  65	ls
+  66	cd test
+  67	ls
+  68	ls -l
+  69	ls -l a
+  70	ls
+  71	
+  72	cp a c
+  73	ls
+  74	cd c
+  75	ls
+  76	cd ..
+  77	ls
+  78	exit
+  1	ls
+  2	ls -l
+  3	cd test
+  4	ls
+  5	ls -l
+  6	cd a
+  7	ls
+  8	ls -l
+  9	cd ..
+  10	ls
+  11	cp a/2 .
+  12	ls
+  13	cp a/2 b/
+  14	ls
+  15	cd b
+  16	ls
+  17	cd ..
+  18	ls
+  19	exit
+  1	ls
+  2	ls -l
+  3	ls
+  4	cd test
+  5	ls
+  6	ls -l
+  7	cp a/2 .
+  8	ls
+  9	exit
+  1	ls
+  2	cd test
+  3	ls
+  4	ls -l
+  5	cp a/2 .
+  6	ls
+  7	ls
+  8	ls -l
+  9	
+  10	
+  11	exit
+  1	ls
+  2	ls -l
+  3	cd test
+  4	ls
+  5	
+  6	
+  7	ls
+  8	cp b/1 a
+  9	
+  10	exit
+  1	ls
+  2	ls -l
+  3	cd test
+  4	ls
+  5	cp 
+  1	ls
+  2	cd test
+  3	ls -l
+  4	cp b/1 a
+  5	ls
+  6	cd a
+  7	ls
+  8	exit
+  1	ls
+  2	ls -l
+  3	cd test
+  4	ls
+  5	ls -l
+  6	
+  7	ls
+  8	cp 
+  1	ls
+  2	ls -l
+  3	cd test
+  4	ls
+  5	ls -l
+  6	cp b/1 a
+  7	ls
+  8	cd a
+  9	ls
+  10	
+  11	
+  12	exit
+  1	ls
+  2	ls -l
+  3	ls
+  4	cd test
+  5	ls
+  6	cd a
+  7	ls
+  8	cp 2 3
+  9	ls
+  10	cd ..
+  11	ls
+  12	cd ..
+  13	ls
+  14	exit
+  1	ls
+  2	ls -l
+  3	cp ../exp1/a/number .
+  4	ls
+  5	ls -l
+  6	rm number
+  7	ls
+  8	ls -l
+  9	cp ../exp1/a/number ../exp1/b/
+  10	exit
+  1	ls
+  2	ls -l
+  3	cd test
+  4	ls
+  5	mkdir c
+  6	ls
+  7	cd c
+  8	ls
+  9	cd ..
+  10	ls
+  11	cp a/1 c/
+  12	ls
+  13	cd c
+  14	ls
+  15	exit
+  1	ls
+  2	cp ../exp1/a/1 ../exp1/b/
+  1	cp ../exp1/a/number ../exp1/b
+  2	exit
+  1	ls
+  2	cd test
+  3	ls
+  4	cd a
+  5	ls
+  6	cd ..
+  7	ls
+  8	cp a/1 c
+  1	ls
+  2	cd test
+  3	ls
+  4	cp a/1 c
+  5	
+  1	cd test
+  2	ls
+  3	cp a/1 c
+  4	ls
+  5	cp a/1 c
+  1	ls
+  2	cd test
+  3	ls
+  4	cp a/1 c
+  1	ls
+  2	cd test
+  3	ls
+  4	cd a
+  5	ls
+  6	cd ..
+  7	ls
+  8	cp a/1 c
+  9	ls
+  10	cd c
+  11	ls
+  12	exit
+  1	ls
+  2	cd test
+  3	ls
+  4	cp a/1 c
+  5	exit
+  1	cd test
+  2	ls
+  3	cp a/1 c
+  4	
+  5	exit
+  1	ls
+  2	cd test
+  3	ls
+  4	cd c
+  5	ls
+  6	cd ..
+  7	ls
+  8	cd a
+  9	ls
+  10	cd ..
+  11	ls
+  12	cp a/1 c
+  13	exit
+  1	ls
+  2	cd test
+  3	ls
+  4	cp a/1 c
+  5	exit
+  1	ls
+  2	cd test
+  3	ls
+  4	ls -l
+  5	cp a/1 c
+  6	exit
+  1	ls
+  2	cd test
+  3	ls
+  4	cp a/1 c
+  5	exit
+  1	ls
+  2	cd test
+  3	ls
+  4	cp a/1 c
+  5	exit
+  1	ls
+  2	cd test
+  3	ls
+  4	cp a/1 c
+  5	exit
