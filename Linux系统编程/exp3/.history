@@ -284,3 +284,184 @@
   3	ls
   4	cp a/1 c
   5	exit
+  1	ls
+  2	ls
+  3	
+  4	
+  5	
+  6	
+  7	exit
+  1	ls
+  2	cat cp.c
+  3	exit
+  1	ls
+  2	cat cp.c
+  3	ls
+  4	cat cp.c makefile
+  5	exit
+  1	ls
+  2	cat cp.c
+  3	cat cp.c makefile
+  4	ls
+  5	exit
+  1	cat makefile
+  2	cat cp.c makefile
+  3	
+  4	
+  5	
+  6	
+  7	exit
+  1	echo $HOME
+  2	echo $USER
+  3	echo lantian
+  4	exit
+  1	ls
+  2	cd test
+  3	ls
+  4	touch d
+  5	ls
+  6	ls -l
+  7	touch c
+  8	ls -l
+  9	touch a.ut
+  10	touch a.out
+  11	ls
+  12	ls -l
+  13	rm a.ut
+  14	ls
+  15	exit
+  1	ls
+  2	cd test
+  3	ls
+  4	ls -l
+  5	touch d
+  6	ls -l
+  7	exit
+  1	ls
+  2	cd test
+  3	ls
+  4	ls -l
+  5	touch d
+  6	ls
+  7	ls -l
+  8	exit
+  1	ls
+  2	cd test
+  3	ls
+  4	ls -l
+  5	touch d
+  6	ls -l
+  7	exit
+  1	ls
+  2	cd test
+  3	ls
+  4	ls -l
+  5	touch d
+  6	ls -l
+  7	touch d -a
+  8	exit
+  1	ls
+  2	cd test
+  3	ls
+  4	touch d
+  5	exit
+  1	cd test
+  2	ls
+  3	touch d
+  4	ls
+  5	ls -l
+  6	exit
+  1	cd test
+  2	ls
+  3	ls -l
+  4	touch d
+  5	ls -l
+  6	exit
+  1	ls
+  2	ls -l
+  3	cd test
+  4	ls -l
+  5	ls -lu
+  6	ls -lc
+  7	
+  8	
+  9	exit
+  1	ls
+  2	cd test
+  3	ls
+  4	ls -l
+  5	ls -lc
+  6	touch d
+  7	ls -lc
+  8	ls -lu
+  9	exit
+  1	ls
+  2	cd test
+  3	ls
+  4	cp d e
+  5	cp 
+  6	ls
+  7	ls -lu
+  8	rm d e a.out
+  9	ls
+  10	ls -l
+  11	cd ..
+  12	ls
+  13	cd ..
+  14	ls
+  15	exit
+  1	time ls
+  2	time ls
+  3	time ls -l
+  4	exit
+  3	
+  4	
+  5	
+  6	exit
+  2	exit
+  1	ls
+  2	cd test
+  3	ls
+  4	ls -l
+  5	touch -a a
+  6	exit
+  1	ls
+  2	cd test
+  3	ls
+  4	ls -l
+  5	touch a
+  6	ls -l
+  7	ls -lu
+  8	ls -lc
+  9	exit
+  1	ls
+  2	time ls
+  3	
+  4	time ls -l
+  5	time ls
+  6	exit
+  6	ls
+  7	exit
+  3	exit
+  1	time ls
+  2	exit
+  1	ls
+  2	sleep 2
+  3	time sleep 2
+  4	time ls
+  5	time cd test
+  6	ls
+  7	cd test
+  8	ls
+  9	exit
+  6	ls
+  7	exit
+  1	time ls
+  2	time sleep 2
+  3	exit
+  1	time ls
+  2	time ls -l
+  3	exit
+  1	time ls
+  2	time ls -l
+  3	exit

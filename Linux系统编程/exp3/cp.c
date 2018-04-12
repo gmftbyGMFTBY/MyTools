@@ -249,10 +249,9 @@ void dir2dir(char* spath, char* dpath)
 int mcp(int argc, char* argv[])
 {
     // 命令行参数错误
-    if (argc != 3)
-    {
-        printf("WRONG!");
-        exit(0);
+    if (argc != 3) {
+        printf("\x1b[31merror use of the command cp\x1b[0m\n");
+        return 1;
     }
     
     // 源确认
@@ -260,21 +259,24 @@ int mcp(int argc, char* argv[])
     int des_file = check_file(argv[2]);
 
     if (sou_file == -1) {
-        printf("WRONG!");
-        exit(0);
+        printf("\x1b[31merror use of the command cp\x1b[0m\n");
+        return 1;
     } else if (sou_file == 0 && des_file == 0) {
         // 目录复制到目录下
         dir2dir(argv[1], argv[2]);
+        return 0;
     } else if (sou_file == 0 && des_file == 1) {
         // 目录复制到文件下, ok
-        printf("WRONG!");
-        exit(0);
+        printf("\x1b[31merror use of the command cp\x1b[0m\n");
+        return 1;
     } else if (sou_file == 1 && des_file == 0) {
         // 普通文件复制到目录下, ok
         file2dir(argv[1], argv[2]);
+        return 0;
     } else if (sou_file == 1 && des_file == 1) {
         // 文件复制, ok
         file2file(argv[1], argv[2]);
+        return 0;
     }
     return 0;
 }

@@ -10,6 +10,7 @@
 #include <grp.h>
 #include <pwd.h>
 #include <time.h>
+#include <utime.h>
 
 #define ANSI_COLOR_RED     "\x1b[31m"
 #define ANSI_COLOR_GREEN   "\x1b[32m"
@@ -18,6 +19,14 @@
 #define ANSI_COLOR_MAGENTA "\x1b[35m"
 #define ANSI_COLOR_CYAN    "\x1b[36m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
+
+#define MAX_LENGTH 200
+
+// define the time struct
+struct utimebuf {
+    time_t actime;
+    time_t modtime;
+};
 
 char* pwd()
 {
@@ -29,6 +38,94 @@ void cd(char* argv)
     if (chdir(argv) == -1) {
         perror("chdir");
         return ;
+    }
+}
+
+void echo(int argc, char* argv[])
+{
+    // the simple echo for the users
+    // get the env value for the user
+    // the system call is the [getenv(env_name)], return the char* for print
+
+}
+
+void touch(int argc, char* argv[], int acc, int modifaction)
+{
+    // touch command try to change the file's timestamps, use current timestamps
+    // If the file do not exist, try to create one
+    // touch can affect the file or the dir, and the system call is [utime]
+    struct stat buf;
+    struct utimbuf timebuf;
+    DIR* dir = NULL;
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "-a") == 0 || strcmp(argv[i], "-m") == 0) continue;
+        if (access(argv[i], F_OK) == -1) {
+            // file do not exist, create one
+            creat(argv[i], 0777);
+            continue;
+        }
+        else {
+            // file exist, change the timestamps - [access time, modifacation time]
+            if (stat(argv[i], &buf)) {
+                perror("stat");
+            }
+
+            int fd;
+            if (acc || (!acc && !modifaction)) {
+                // default is access status
+                if (!S_ISDIR(buf.st_mode)) {
+                    if ((fd = open(argv[i], O_RDONLY | O_TRUNC)) < 0) {
+                        perror("open");
+                        continue;
+                    }
+                }
+                else {
+                    if ((dir = opendir(argv[i])) < 0) {
+                        perror("opendir");
+                        continue;
+                    }
+                    closedir(dir);
+                }
+            }
+            else if (modifaction){
+                if (!S_ISDIR(buf.st_mode)) {
+                    if ((fd = open(argv[i], O_RDWR | O_TRUNC)) < 0) {
+                        perror("open");
+                        continue;
+                    }
+                }
+                else {
+                    if ((dir = opendir(argv[i])) < 0) {
+                        perror("opendir");
+                        continue;
+                    }
+                    closedir(dir);
+                }
+            }
+            
+            close(fd);
+            timebuf.actime  = buf.st_atime;
+            timebuf.modtime = buf.st_mtime;
+
+            if (utime(argv[i], &timebuf) < 0) {
+                perror("utime");
+                continue;
+            }
+        }
+    }
+}
+
+void cat(int argc, char* argv[])
+{
+    // cat function try to write the content into the stdout
+    char data[MAX_LENGTH];
+    for (int i = 1; i < argc; i++) {
+        printf(ANSI_COLOR_RED "%s:\n" ANSI_COLOR_RESET, argv[i]);
+        FILE* fp = fopen(argv[i], "r");
+        while (fgets(data, sizeof(data), fp)) {
+            fputs(data, stdout);
+        }
+        fputs("\n", stdout);
     }
 }
 
@@ -82,7 +179,7 @@ void file_gid_uid(int uid, int gid)
     printf("\t%s\t%s", ptr->pw_name, str-> gr_name);
 }
 
-void ls(int count, char* argv[], int flag) 
+void ls(int count, char* argv[], int flag, int time) 
 {
     struct stat buf;
     DIR* dirptr = NULL;
@@ -139,7 +236,9 @@ void ls(int count, char* argv[], int flag)
                         printf("\t%lld", ss.st_size);
     
                         // time
-                        printf("\t%.12s",4 + ctime(&ss.st_mtime));
+                        if (time == 0) printf("\t%.12s", 4 + ctime(&ss.st_mtime));
+                        else if (time == 1) printf("\t%.12s", 4 + ctime(&ss.st_ctime));
+                        else if (time == 2) printf("\t%.12s", 4 + ctime(&ss.st_atime));
     
                         // name
                         if (S_ISDIR(ss.st_mode)) {
@@ -162,7 +261,11 @@ void ls(int count, char* argv[], int flag)
                 printf("1\t");
                 file_gid_uid(buf.st_uid, buf.st_gid);
                 printf("\t%lld", buf.st_size);
-                printf("\t%.12s",4 + ctime(&buf.st_mtime));
+
+                if (time == 0) printf("\t%.12s", 4 + ctime(&buf.st_mtime));
+                else if (time == 1) printf("\t%.12s", 4 + ctime(&buf.st_ctime));
+                else if (time == 2) printf("\t%.12s", 4 + ctime(&buf.st_atime));
+
                 printf(ANSI_COLOR_GREEN "\t%s\n" ANSI_COLOR_RESET, argv[i]);
             }
         }
@@ -172,7 +275,7 @@ void ls(int count, char* argv[], int flag)
     }
 }
 
-void mls(int argc, char* argv[], int flag)
+void mls(int argc, char* argv[], int flag, int time)
 {
     /*
     char p[100];
@@ -191,17 +294,17 @@ void mls(int argc, char* argv[], int flag)
         char* data[2];
         data[1] = (char*) malloc (sizeof(char) * 100);
         strcpy(data[1], "./");
-        ls(2, data, 0);
+        ls(2, data, 0, time);
         free(data[1]);
     }
     else {
-        if (argc == 2 && (strcmp(argv[1], "-l") == 0)) {
+        if (argc == 2 && (strcmp(argv[1], "-l") == 0 || strcmp(argv[1], "-lc") == 0 || strcmp(argv[1], "-lu") == 0)) {
             argv[2] = (char*) malloc (sizeof(char) * 100);
             strcpy(argv[2], "./");
-            ls(3, argv, 1);
+            ls(3, argv, 1, time);
             free(argv[2]);
         }
-        else ls(argc, argv, flag);
+        else ls(argc, argv, flag, time);
     }
 }
 
@@ -335,7 +438,7 @@ int read_history(int argc, char* argv[], char* his)
 {
     // the file is .history in the workpath 
     FILE* fd;
-    char data[200];
+    char data[MAX_LENGTH];
     fd = fopen(his, "r");
     while (fgets(data, sizeof(data), fd)) {
         fputs(data, stdout);
@@ -349,7 +452,7 @@ int analyse(char* cmd, char* para[])
     strcat(cmd, " \0");
     int head = 0;
     int flag = 0;       // 1 - ' ' before
-    char registe[100];
+    char registe[MAX_LENGTH];
     int point = 0;
     int i;
     for (i = 0; i < strlen(cmd); i++) {
@@ -358,7 +461,7 @@ int analyse(char* cmd, char* para[])
         }
         else if (cmd[i] == ' ' && flag == 0) {
             registe[point] = '\0';
-            para[head] = (char*)malloc(sizeof(char) * 100);
+            para[head] = (char*)malloc(sizeof(char) * MAX_LENGTH);
             strcpy(para[head], registe);
             head ++;
             point = 0;
@@ -377,28 +480,30 @@ void help()
 {
     // print the help menu
     printf(ANSI_COLOR_RED "Help Menu:\n" ANSI_COLOR_RESET);
-    printf(ANSI_COLOR_RED "  1. cd      - change dir\n" ANSI_COLOR_RESET);
-    printf(ANSI_COLOR_RED "  2. ls      - list the path\n" ANSI_COLOR_RESET);
-    printf(ANSI_COLOR_RED "     * -l: show more message\n" ANSI_COLOR_RESET);
-    printf(ANSI_COLOR_RED "  3. pwd     - show current path\n" ANSI_COLOR_RESET);
-    printf(ANSI_COLOR_RED "  4. rm      - remove the file or dir\n" ANSI_COLOR_RESET);
-    printf(ANSI_COLOR_RED "     * -r: recursive remove the directory\n" ANSI_COLOR_RESET);
-    printf(ANSI_COLOR_RED "     * -f: force to execute\n" ANSI_COLOR_RESET);
-    printf(ANSI_COLOR_RED "     * -rf: recursive remove and do not ask for user\n" ANSI_COLOR_RESET);
-    printf(ANSI_COLOR_RED "  5. mkdir   - create the directory\n" ANSI_COLOR_RESET);
-    printf(ANSI_COLOR_RED "  6. mv      - move the file or directory\n" ANSI_COLOR_RESET);
-    printf(ANSI_COLOR_RED "  7. cp      - copy the file or directory\n" ANSI_COLOR_RESET);
-    printf(ANSI_COLOR_RED "  8. exit    - exit the termianl\n" ANSI_COLOR_RESET);
-    printf(ANSI_COLOR_RED "  9. history - show the command history\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "  1.  cd      - change dir\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "  2.  ls      - list the path\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "      * -l: show more message\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "  3.  pwd     - show current path\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "  4.  rm      - remove the file or dir\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "      * -r: recursive remove the directory\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "      * -f: force to execute\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "      * -rf: recursive remove and do not ask for user\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "  5.  mkdir   - create the directory\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "      * -p: recursive create the directory\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "  6.  mv      - move the file or directory\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "  7.  cp      - copy the file or directory\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "  8.  exit    - exit the termianl\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "  9.  history - show the command history\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "  10. cat     - show the content of the file\n" ANSI_COLOR_RESET);
     return ;
 }
 
 int main(int argc, char* argv[])
 {
     int his_count = 0;
-    char cmd[200];
-    char* para[200];
-    char his[200];      // record the main workpath for the .history
+    char  cmd[MAX_LENGTH];
+    char* para[MAX_LENGTH];
+    char  his[MAX_LENGTH];      // record the main workpath for the .history
     strcpy(his, pwd());
     // Check or create the .history file
     strcat(his, "/.history");
@@ -424,13 +529,24 @@ int main(int argc, char* argv[])
         }
         else if (strcmp(para[0], "ls") == 0) {
             int flag = 0;
+            int time = 0;
             for (int i = 1; i < argc; i++) {
                 if (strcmp(para[i], "-l") == 0) {
                     flag = 1;
                     break;
                 }
+                if (strcmp(para[i], "-lc") == 0) {
+                    // modifaction time
+                    time = 1;
+                    break;
+                }
+                if (strcmp(para[i], "-lu") == 0) {
+                    // access time
+                    time = 2;
+                    break;
+                }
             }
-            mls(argc, para, flag);
+            mls(argc, para, flag, time);
         }
         else if (strcmp(para[0], "rm") == 0) {
             int flag = 0;       // flag - 0: ask users normally, default
@@ -479,6 +595,21 @@ int main(int argc, char* argv[])
         else if (strcmp(para[0], "history") == 0) {
             // read the .bash_history file to show the history
             read_history(argc, argv, his);
+        }
+        else if (strcmp(para[0], "cat") == 0) {
+            cat(argc, para);
+        }
+        else if (strcmp(para[0], "touch") == 0) {
+            int access = 0;
+            int modifaction = 0;
+            for (int i = 1; i < argc; i ++) {
+                if (strcmp(para[i], "-a") == 0) access = 1;continue;
+                if (strcmp(para[i], "-m") == 0) modifaction = 1;continue;
+            }
+            touch(argc, para, access, modifaction);
+        }
+        else if (strcmp(para[0], "time") == 0) {
+            mtime(argc, para);
         }
         else if (strcmp(para[0], "exit") == 0) exit(0);
         else {
