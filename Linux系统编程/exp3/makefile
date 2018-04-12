@@ -9,4 +9,4 @@ mycp.o: mycp.c
 mytime.o: mytime.c
 	gcc -c mytime.c -o mytime.o
 clean:
-	rm a.out libmcp.a cp.o libmtime.a mytime.o
+	rm a.out libmcp.a mycp.o libmtime.a mytime.o

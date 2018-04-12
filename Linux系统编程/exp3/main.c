@@ -5,7 +5,6 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <sys/stat.h>
 #include <dirent.h>
 #include <grp.h>
 #include <pwd.h>
@@ -171,6 +170,11 @@ void file_gid_uid(int uid, int gid)
     printf("\t%s\t%s", ptr->pw_name, str-> gr_name);
 }
 
+int compare(const void* lhs, const void* rhs)
+{
+    return strcmp(((struct dirent*)lhs)->d_name, ((struct dirent*)rhs)->d_name);
+}
+
 void ls(int count, char* argv[], int flag, int time) 
 {
     struct stat buf;
@@ -180,10 +184,9 @@ void ls(int count, char* argv[], int flag, int time)
     for (int i = 1; i < count; i++) {
         if (strcmp(argv[i], "-l") == 0) continue;
 
-
         // file not exist case
         if (access(argv[i], F_OK) == -1) {
-            perror("access");
+            // perror("access");
             continue;
         }
 
@@ -196,51 +199,61 @@ void ls(int count, char* argv[], int flag, int time)
             strcpy(savepoint, pwd());
             cd(argv[i]);
 
-                // show the file under the dir
-                while (entry = readdir(dirptr)) {
-                    stat(entry->d_name, &buf);
+            // show the file under the dir
 
-                    if (flag == 0) {
-                        if (entry->d_name[0] == '.') continue;
-                        printf("  %s\n", entry->d_name);
+            // sort test
+            struct dirent en[100];
+            int number = 0;
+            while (entry = readdir(dirptr)) {
+                en[number++] = *entry;
+            }
+            qsort(en, number, sizeof(en[0]), compare);
+            
+            for (int i =0; i < number; i++){
+                entry = &en[i];
+                stat(entry->d_name, &buf);
+
+                if (flag == 0) {
+                    if (entry->d_name[0] == '.') continue;
+                    printf("  %s\n", entry->d_name);
+                }
+                else if (flag == 1) {
+                    // mode
+                    show_file_mode(&buf);
+
+                    // file number
+                    struct stat ss;
+                    stat(entry->d_name, &ss);
+                    if (S_ISDIR(ss.st_mode)) {
+                        // this place may occur the error about the [Permission denyed]
+                        DIR* dd = opendir(entry->d_name);
+                        struct dirent* ee = NULL;
+                        int count = 0;
+                        while (ee = readdir(dd)) count ++;
+                        printf("%d", count);
                     }
-                    else if (flag == 1) {
-                        // mode
-                        show_file_mode(&buf);
-    
-                        // file number
-                        struct stat ss;
-                        stat(entry->d_name, &ss);
-                        if (S_ISDIR(ss.st_mode)) {
-                            // this place may occur the error about the [Permission denyed]
-                            DIR* dd = opendir(entry->d_name);
-                            struct dirent* ee = NULL;
-                            int count = 0;
-                            while (ee = readdir(dd)) count ++;
-                            printf("%d", count);
-                        }
-                        else printf("1");
-    
-                        // uid, gid
-                        file_gid_uid(ss.st_uid, ss.st_gid);
-    
-                        // size
-                        printf("\t%lld", ss.st_size);
-    
-                        // time
-                        if (time == 0) printf("\t%.12s", 4 + ctime(&ss.st_mtime));
-                        else if (time == 1) printf("\t%.12s", 4 + ctime(&ss.st_ctime));
-                        else if (time == 2) printf("\t%.12s", 4 + ctime(&ss.st_atime));
-    
-                        // name
-                        if (S_ISDIR(ss.st_mode)) {
-                            printf(ANSI_COLOR_BLUE "\t%s\n" ANSI_COLOR_RESET, entry->d_name);
-                        }
-                        else {
-                            printf("\t%s\n", entry->d_name);
-                        }
+                    else printf("1");
+
+                    // uid, gid
+                    file_gid_uid(ss.st_uid, ss.st_gid);
+
+                    // size
+                    printf("\t%lld", ss.st_size);
+
+                    // time
+                    if (time == 0) printf("\t%.12s", 4 + ctime(&ss.st_mtime));
+                    else if (time == 1) printf("\t%.12s", 4 + ctime(&ss.st_ctime));
+                    else if (time == 2) printf("\t%.12s", 4 + ctime(&ss.st_atime));
+ 
+                    // name
+                    if (S_ISDIR(ss.st_mode)) {
+                        printf(ANSI_COLOR_BLUE "\t%s\n" ANSI_COLOR_RESET, entry->d_name);
+                    }
+                    else {
+                        printf("\t%s\n", entry->d_name);
                     }
                 }
+            }
             closedir(dirptr);
             cd(savepoint);
         }
@@ -610,13 +623,13 @@ int main(int argc, char* argv[])
         else if (strcmp(para[0], "time") == 0) {
             mtime(argc, para);
         }
-        else if (strcmp(para[0], 'j') == 0) {
+        else if (strcmp(para[0], "j") == 0) {
             // the autojump extension of this ltsh
-            myjump(argc, para);
+            // myjump(argc, para);
         }
         else if (strcmp(para[0], "exit") == 0) exit(0);
         else {
-            if (strlen(cmd) == 1) help();
+            if (strlen(cmd) == 1 || strcmp(para[0], "help")) help();
             // execute the system function to help using this shell
             else system(cmd);
         }
