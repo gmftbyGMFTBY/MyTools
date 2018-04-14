@@ -520,6 +520,9 @@ void help()
     printf(ANSI_COLOR_RED "      * -a: create or change access timestamps\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "      * -m: create or chaneg modifaction timestamps\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "  12. time    - count the time of the commands\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "  13. j       - autojump to the dir you want\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "      * --purge: clean the database\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "      * -s: show the database\n" ANSI_COLOR_RESET);
     return ;
 }
 
@@ -637,8 +640,15 @@ int main(int argc, char* argv[])
             mtime(argc, para);
         }
         else if (strcmp(para[0], "j") == 0) {
-            // the autojump extension of this ltsh
-            myjump(0, WORK_PATH, para[1]);
+            if (argc != 2) {
+                printf(ANSI_COLOR_RED "Wrong paramter!\n" ANSI_COLOR_RESET);
+                continue;
+            }
+
+            // purge or jump 
+            if (strcmp(para[1], "--purge") == 0) myjump(2, WORK_PATH, para[1]);
+            else if (strcmp(para[1], "-s") == 0) myjump(3, WORK_PATH, para[1]);
+            else myjump(0, WORK_PATH, para[1]);
         }
         else if (strcmp(para[0], "exit") == 0) exit(0);
         else {

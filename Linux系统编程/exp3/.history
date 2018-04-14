@@ -140,3 +140,111 @@
   4	ls
   5	cd XX-Net
   6	exit
+  1	ls
+  2	j --purge
+  1	ls
+  2	j --purge
+  1	j --purge
+  1	ls
+  2	j --purge
+  1	j --purge
+  1	ls
+  2	j --purge
+  1	ls
+  2	j --purge
+  1	ls
+  2	j --purge
+  3	exit
+  1	j --purge
+  2	ls
+  3	exit
+  1	j --purge
+  2	
+  3	j --purge
+  4	j --purge
+  5	exit
+  1	j --purge
+  2	exit
+  1	ls
+  2	j --purge
+  1	ls
+  2	j nihao
+  3	ls -la
+  4	ls -l
+  5	cat 
+  6	cat .autojump
+  7	cd ..
+  8	cd exp3
+  9	cat .autojump
+  10	j --purge
+  11	cat .autojump
+  12	exit
+  1	ls
+  2	cd ..
+  3	cd exp3
+  4	ls
+  5	cat .autojump
+  6	j --purge
+  7	cat .autojum[
+  8	cat .autojump
+  9	exit
+  1	ls
+  2	cd ..
+  3	l
+  4	cd exp3
+  5	ls
+  6	ls -l
+  7	cat .autojum[
+  8	cat .autojump
+  9	j --purge
+  10	exit
+  1	ls
+  2	cd ..
+  3	ls
+  4	cd exp3
+  5	cat .autojump
+  6	j --purge
+  7	exit
+  1	ls
+  2	cd ..
+  3	cd exp3
+  4	cat .autojump
+  5	j --purge
+  6	cat .autojump
+  7	ls -l
+  8	exit
+  1	cd ..
+  2	exit
+  1	ls
+  2	cd ..
+  3	ls
+  4	cd exp3
+  5	ls
+  6	cat .autojump
+  7	j desk
+  8	j nihao
+  9	j nihao
+  10	ls
+  1	j desk
+  2	j nihao
+  11	exit
+  3	ls
+  4	exit
+  1	j desk
+  2	j nihao
+  3	exit
+  1	j desk
+  2	j nihao
+  3	exit
+  1	j -s
+  2	
+  3	exit
+  1	j -s
+  2	exit
+  1	j -s
+  2	exit
+  1	j -s
+  1	j -s
+  2	ls
+  3	exit
+  2	exit

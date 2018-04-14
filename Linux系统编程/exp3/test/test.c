@@ -3,7 +3,25 @@
 #include <fcntl.h>
 #include <string.h>
 
-int main()
+void purge()
+{
+    char data[200];
+    FILE* fp = fopen("lantian", "r+");
+    
+    while (fgets(data, sizeof(data), fp)) {
+        int weight;
+        char path[200];
+        sscanf(data, "%s %d", path, &weight);
+
+        if (strcmp(path, "/home/lantian/File/NIHAO") != 0) {
+            fseek(fp, -strlen(data), SEEK_CUR);
+            fprintf(fp, " ", path, weight);
+            break;
+        }
+    }
+}
+
+int create()
 {
     char data[200];
     FILE* fp = fopen("lantian", "w");
@@ -24,5 +42,12 @@ int main()
         fprintf(fp, "%-200s %-5d\n", apath, weight[i]);
         pclose(pp);
     }
+    return 0;
+}
+
+int main(int argc, char* argv[])
+{
+    purge();
+    // create();
     return 0;
 }

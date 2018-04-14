@@ -22,7 +22,6 @@
    The path in the file .autojump must be the absolute pathname
  */
 
-char filename[MAX_LENGTH];
 char FILE_NAME[200];
 
 int get_absolute_path(char* path, char save[])
@@ -132,6 +131,55 @@ int read_file(char* argv, char choose[])
     return 0;
 }
 
+void purge()
+{
+    // check the file .autojump and purge the wrong path
+    char fileback[MAX_LENGTH];
+    char data[MAX_LENGTH + 10];
+    strcpy(fileback, FILE_NAME);
+    strcat(fileback, ".bak");
+    int count = 0;
+
+
+    FILE* fb = fopen(fileback, "w");
+    FILE* fp = fopen(FILE_NAME, "r+");
+
+    while (fgets(data, sizeof(data), fp)) {
+        int weight;
+        char path[MAX_LENGTH];
+
+        sscanf(data, "%s %d", path, &weight);
+
+        if (access(path, F_OK) != -1) {
+            fprintf(fb, "%s", data);
+        }
+        else {
+            // file do not exist, purge, do not write into the fb
+            count += 1;
+        }
+    }
+    
+    fclose(fb);
+    fclose(fp);
+
+    // rename the file
+    rename(fileback, FILE_NAME);
+    printf("Purge %d entries\n", count);
+}
+
+void show_database()
+{
+    char data[MAX_LENGTH + 10];
+    FILE* fp = fopen(FILE_NAME, "r");
+    while (fgets(data, sizeof(data), fp)) {
+        int weight;
+        char path[MAX_LENGTH];
+
+        sscanf(data, "%s %d", path, &weight);
+        printf("\x1b[34m%s\n\x1b[0m", path);
+    }
+}
+
 int myjump(int rw, char* work_path, char* argv)
 {
     /*
@@ -140,12 +188,24 @@ int myjump(int rw, char* work_path, char* argv)
      */
     
     // check the file existing
+    memset(FILE_NAME, '\0', sizeof(FILE_NAME));
     strcpy(FILE_NAME, work_path);
     strcat(FILE_NAME, ".autojump");
     
     if (access(FILE_NAME, F_OK) == -1) {
         printf("\x1b[31mFile .autojump do not exist in work_path, create!\x1b[0m\n");
         creat(FILE_NAME, 0777);
+    }
+
+    if (rw == 2) {
+        // purge the databse
+        purge();
+        return 0;
+    }
+    else if (rw == 3) {
+        // show database
+        show_database();
+        return 0;
     }
 
     if ( !rw ) {
