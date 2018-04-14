@@ -506,7 +506,6 @@ void help()
     printf(ANSI_COLOR_RED "      * -a: create or change access timestamps\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "      * -m: create or chaneg modifaction timestamps\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "  12. time    - count the time of the commands\n" ANSI_COLOR_RESET);
-    printf(ANSI_COLOR_RED "  13. cat     - get the file context to the stdout\n" ANSI_COLOR_RESET);
     return ;
 }
 
@@ -629,7 +628,7 @@ int main(int argc, char* argv[])
         }
         else if (strcmp(para[0], "exit") == 0) exit(0);
         else {
-            if (strlen(cmd) == 1 || strcmp(para[0], "help")) help();
+            if (strlen(cmd) == 1) help();
             // execute the system function to help using this shell
             else system(cmd);
         }
