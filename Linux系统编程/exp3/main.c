@@ -20,6 +20,7 @@
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
 #define MAX_LENGTH 200
+#define WORK_PATH "/home/lantian/File/MyTools/Linux系统编程/exp3/"
 
 // define the time struct
 struct utimebuf {
@@ -34,6 +35,11 @@ char* pwd()
 
 void cd(char* argv)
 {
+    // myjump write-model
+    char pause[MAX_LENGTH];
+    strcpy(pause, argv);
+    myjump(1, WORK_PATH, pause);
+
     if (chdir(argv) == -1) {
         perror("chdir");
         return ;
@@ -112,6 +118,13 @@ void cat(int argc, char* argv[])
     char data[MAX_LENGTH];
     for (int i = 1; i < argc; i++) {
         printf(ANSI_COLOR_RED "%s:\n" ANSI_COLOR_RESET, argv[i]);
+
+        if (access(argv[i], F_OK) == -1) {
+            // file do not exist
+            perror("access");
+            continue;
+        }
+
         FILE* fp = fopen(argv[i], "r");
         while (fgets(data, sizeof(data), fp)) {
             fputs(data, stdout);
@@ -197,7 +210,8 @@ void ls(int count, char* argv[], int flag, int time)
 
             char savepoint[100];
             strcpy(savepoint, pwd());
-            cd(argv[i]);
+            // cd(argv[i]);
+            chdir(argv[i]);
 
             // show the file under the dir
 
@@ -255,7 +269,7 @@ void ls(int count, char* argv[], int flag, int time)
                 }
             }
             closedir(dirptr);
-            cd(savepoint);
+            chdir(savepoint);
         }
         else {
             if (flag == 0) {
@@ -624,7 +638,7 @@ int main(int argc, char* argv[])
         }
         else if (strcmp(para[0], "j") == 0) {
             // the autojump extension of this ltsh
-            // myjump(argc, para);
+            myjump(0, WORK_PATH, para[1]);
         }
         else if (strcmp(para[0], "exit") == 0) exit(0);
         else {

@@ -15,3 +15,128 @@
   2	exit
   1	
   2	exit
+  1	ls
+  2	j nihao
+  3	ls
+  4	cd -
+  5	cd
+  6	ls
+  7	j exp3
+  1	cat .auto	
+  1	ls
+  1	ls
+  1	ls
+  2	ls -l
+  3	ls
+  4	caexit
+  5	ls
+  6	ls
+  7	cat .autojump
+  8	j repo
+  9	pwd
+  10	exit
+  1	ls
+  2	j study
+  3	ls
+  4	cd ..
+  1	ls
+  2	cd ..
+  1	ls
+  2	cd ..
+  1	cd tst
+  2	cd test
+  1	ls
+  2	cd ..
+  3	ls
+  4	cd exp3
+  5	ls
+  6	exit
+  1	cat .autojump
+  2	
+  3	cat .autojump
+  4	cd ..
+  5	cat .autojump
+  1	ls
+  2	cd ..
+  3	ls
+  4	cat .autojum[
+  5	ls
+  6	cd exp3
+  7	ls
+  8	
+  9	ls
+  10	exit
+  1	ls
+  2	cd ..
+  3	ls
+  4	cd exp3
+  5	ls
+  6	exit
+  1	
+  2	cd ..
+  3	ls
+  4	cd test
+  5	
+  6	
+  7	exit
+  1	ls
+  2	cd ..
+  3	ls
+  4	exit
+  1	ls
+  2	cd ..
+  3	ls
+  4	cd exp3
+  5	ls
+  6	exit
+  1	ls
+  2	cd ..
+  3	exit
+  1	ls
+  2	cd ..
+  3	exit
+  1	ls
+  2	cd ..
+  3	exit
+  1	cd ..
+  2	cd ..;pwd
+  3	exit
+  1	cd ..
+  2	exit
+  1	cd ..
+  1	cd ..
+  2	exit
+  1	cd ..
+  2	exit
+  1	cd ..
+  2	exit
+  1	ls
+  2	cd ..
+  3	ls
+  4	exit
+  1	cd ..
+  2	cd exp3
+  3	cd ..
+  4	exit
+  1	ls
+  2	cd ..
+  3	cd exp3
+  4	cd ..
+  5	exit
+  1	ls
+  2	cd ..
+  3	cd exp3
+  4	cd ..
+  5	cd exp3
+  6	exit
+  1	cd ..
+  2	cd exp3
+  3	cd ..
+  4	cd exp3
+  5	exit
+  1	ls
+  2	cd test
+  3	j down
+  4	ls
+  5	cd XX-Net
+  6	exit
