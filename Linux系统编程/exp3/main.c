@@ -135,6 +135,14 @@ void cat(int argc, char* argv[])
         }
         fputs("\n", stdout);
     }
+
+    if (argc == 1) {
+        // test cat
+        char pause[MAX_LENGTH];
+        while (fgets(pause, MAX_LENGTH, stdin)) {
+            fputs(pause, stdout);
+        }
+    }
 }
 
 void show_file_mode(struct stat *buf)
@@ -348,6 +356,7 @@ void delete_file(char* filename, int flag)
         unlink(filename);
         return;
     }
+
     else {
         if (flag == 0 || flag == 1) {
             printf("Can not delete the dir by rm, need -r paramter\n");
@@ -520,6 +529,7 @@ void help()
     printf(ANSI_COLOR_RED "  8.  exit    - exit the termianl\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "  9.  history - show the command history\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "  10. cat     - show the content of the file\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "      File can be default as stdin\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "  11. touch   - create or change the tiemstamps\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "      * -a: create or change access timestamps\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "      * -m: create or chaneg modifaction timestamps\n" ANSI_COLOR_RESET);
@@ -717,10 +727,14 @@ int main(int argc, char* argv[])
         argc = analyse(cmd, para);
         forargc = 0;        // ready for count the argv in the pipe or freopen
         int flag_pre = 0;   // record the |
+        int flag_redw = 0;   // record the >
+        int flag_redr = 0;   // record the <
+        int wrong = 0;
 
         // need to check 
         
         for (int i = 0; i < argc; i++) {
+
             // check the `|` or `>` in the command
             if (strcmp(para[i], "|") == 0) {
                 // the pipeline case
@@ -748,6 +762,45 @@ int main(int argc, char* argv[])
                 }
                 forargc = 0;
             }
+            else if (strcmp(para[i], "<") == 0) {
+                if (flag_pre != 0) {
+                    // ls -l | cat < 6, error usage
+                    printf(ANSI_COLOR_RED "Error Usage!\n" ANSI_COLOR_RESET);
+                    unlink("./log");
+                    wrong = 1;
+                    break;
+                }
+
+                // redirection the stdin
+                flag_redr = 1;
+                i ++;
+                redirection_stdin(para[i]);
+                core(cmd, forargc, forpara, his);
+                backup_stdin();
+
+                // append the paramter into the file
+                forpara[forargc] = (char*) malloc (sizeof(char) * MAX_LENGTH);
+                strcpy(forpara[forargc], para[i]);
+                forargc ++;
+            }
+            else if (strcmp(para[i], ">") == 0) {
+                i ++;
+                if (flag_pre == 0) {
+                    // cat 6 > 8
+                    flag_redw = 1;
+                    redirection_stdout(para[i]);
+                    core(cmd, forargc, forpara, his);
+                    backup_stdout();
+                }
+                else {
+                    // ls -l | cat > 8
+                    redirection_stdin("./log");
+                    redirection_stdout(para[i]);
+                    core(cmd, forargc, forpara, his);
+                    backup_stdin();
+                    backup_stdout();
+                }
+            }
             else {
                 // normal case
                 forpara[forargc] = (char*) malloc (sizeof(char) * MAX_LENGTH);
@@ -755,15 +808,24 @@ int main(int argc, char* argv[])
                 forargc ++;
             }
         }
-        if (forargc != 0) {
-            if (flag_pre == 0) {
-                core(cmd, forargc, forpara, his);
-            }
-            else {
-                // need to redir stdin, do not need to redir stdout
-                redirection_stdin("./log");
-                core(cmd, forargc, forpara, his);
-                backup_stdin();
+
+        if (wrong) continue;
+
+        if (flag_pre != 0) {
+            // need to redir stdin, do not need to redir stdout
+            redirection_stdin("./log");
+            if (flag_redw == 0) core(cmd, forargc, forpara, his);
+            core(cmd, forargc, forpara, his);
+            backup_stdin();
+        }
+        else {
+            if (flag_redw == 0) core(cmd, forargc, forpara, his);
+        }
+
+        if (flag_pre != 0) {
+            // does exist the piepline in the command, delete the file ./log
+            if (unlink("./log")) {
+                perror("unlink");
             }
         }
     }
