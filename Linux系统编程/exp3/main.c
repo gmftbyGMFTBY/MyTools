@@ -22,6 +22,10 @@
 #define MAX_LENGTH 200
 #define WORK_PATH "/home/lantian/File/MyTools/Linux系统编程/exp3/"
 
+// save the stdout filenumber
+int save_fdw = 0;
+int save_fdr = 0;
+
 // define the time struct
 struct utimebuf {
     time_t actime;
@@ -453,7 +457,7 @@ int write_history(char* cmd, int count, char* his)
     fclose(fd);
 }
 
-int read_history(int argc, char* argv[], char* his)
+int read_history(int argc, char* his)
 {
     // the file is .history in the workpath 
     FILE* fd;
@@ -526,12 +530,173 @@ void help()
     return ;
 }
 
+int core(char* cmd, int argc, char* para[], char* his)
+{
+    if (strcmp(para[0], "cd") == 0) cd(para[1]);
+    else if (strcmp(para[0], "pwd") == 0) {
+        printf("%s\n", pwd());
+    }
+    else if (strcmp(para[0], "ls") == 0) {
+        int flag = 0;
+        int time = 0;
+        for (int i = 1; i < argc; i++) {
+            if (strcmp(para[i], "-l") == 0) {
+                flag = 1;
+                break;
+            }
+            if (strcmp(para[i], "-lc") == 0) {
+                // modifaction time
+                time = 1;
+                break;
+            }
+            if (strcmp(para[i], "-lu") == 0) {
+                // access time
+                time = 2;
+                break;
+            }
+        }
+        mls(argc, para, flag, time);
+    }
+    else if (strcmp(para[0], "rm") == 0) {
+        int flag = 0;       // flag - 0: ask users normally, default
+                            // flag - 1: do not ask users normally
+                            // flag - 2: recursive and ask users
+                            // flag - 3: recursive and do not ask users
+        for (int i = 1; i < argc; i++) {
+            if (strcmp(para[i], "-r") == 0) {
+                flag = 2;
+                break;
+            }
+            else if (strcmp(para[i], "-f") == 0) {
+                flag = 1;
+                break;
+            }
+            else if (strcmp(para[i], "-rf") == 0) {
+                flag = 3;
+                break;
+            }
+        }
+        mrm(argc, para, flag);
+    }
+    else if (strcmp(para[0], "mkdir") == 0) {
+        // choose the -p model for the command
+        // in order to fix the path, append the character '/'
+        int flag = 0;
+        for (int i = 1; i < argc; i++) {
+            if (strcmp(para[i], "-p") == 0) {
+                flag = 1;
+                break;
+            }
+        }
+        mmkdir(argc, para, flag);
+    }
+    else if (strcmp(para[0], "cp") == 0) {
+        // cp, use libmcp.a as the lib
+        mcp(argc, para);
+    }
+    else if (strcmp(para[0], "mv") == 0) {
+        // mv, use mcp and mrm
+        // cp to copy the file (regular file, dir file)
+        // mcp(argc, para);
+        // mrm to delete the file, only delete the source file
+        mrm(2, para, 3);
+    }
+    else if (strcmp(para[0], "history") == 0) {
+        // read the .bash_history file to show the history
+        read_history(argc, his);
+    }
+    else if (strcmp(para[0], "cat") == 0) {
+        cat(argc, para);
+    }
+    else if (strcmp(para[0], "touch") == 0) {
+        int access = 0;
+        int modifaction = 0;
+        for (int i = 1; i < argc; i ++) {
+            if (strcmp(para[i], "-a") == 0) access = 1;continue;
+            if (strcmp(para[i], "-m") == 0) modifaction = 1;continue;
+        }
+        touch(argc, para, access, modifaction);
+    }
+    else if (strcmp(para[0], "time") == 0) {
+        mtime(argc, para);
+    }
+    else if (strcmp(para[0], "j") == 0) {
+        if (argc != 2) {
+            printf(ANSI_COLOR_RED "Wrong paramter!\n" ANSI_COLOR_RESET);
+            return -1;
+        }
+
+        // purge or jump 
+        if (strcmp(para[1], "--purge") == 0) myjump(2, WORK_PATH, para[1]);
+        else if (strcmp(para[1], "-s") == 0) myjump(3, WORK_PATH, para[1]);
+        else myjump(0, WORK_PATH, para[1]);
+    }
+    else if (strcmp(para[0], "exit") == 0) exit(0);
+    else {
+        if (strlen(cmd) == 1) help();
+        // execute the system function to help using this shell
+        else system(cmd);
+    }
+}
+
+int backup_stdout()
+{
+    // backup the stdout
+    dup2(save_fdw, 1);
+}
+
+int backup_stdin()
+{
+    dup2(save_fdr, 0);
+}
+
+int redirection_stdout(char* filename)
+{
+    // do not need to stdin freopen, only need to freopen the stdout
+    save_fdw = dup(1);
+    int fd = open(filename, O_CREAT | O_RDWR, 0666);
+    if (fd < 0) {
+        perror("open");
+        return 1;
+    }
+    // close the stdout
+    close(1);
+
+    int new_fd = dup(fd);
+    if (new_fd < 0) {
+        perror("dup");
+        return 1;
+    }
+    close(fd);    
+}
+
+int redirection_stdin(char* filename)
+{
+    // redir stdin
+    save_fdr = dup(0);
+    int fd = open(filename, O_CREAT | O_RDWR, 0666);
+    if (fd < 0) {
+        perror("open");
+        return 1;
+    }
+    close(0);
+    int new_fd = dup(fd);
+    if (new_fd < 0) {
+        perror("open");
+        return 1;
+    }
+    close(fd);
+}
+
 int main(int argc, char* argv[])
 {
     int his_count = 0;
     char  cmd[MAX_LENGTH];
     char* para[MAX_LENGTH];
     char  his[MAX_LENGTH];      // record the main workpath for the .history
+    char* forpara[MAX_LENGTH];
+    int forargc;
+
     strcpy(his, pwd());
     // Check or create the .history file
     strcat(his, "/.history");
@@ -550,111 +715,56 @@ int main(int argc, char* argv[])
         write_history(cmd, his_count, his);
 
         argc = analyse(cmd, para);
-        
-        if (strcmp(para[0], "cd") == 0) cd(para[1]);
-        else if (strcmp(para[0], "pwd") == 0) {
-            printf("%s\n", pwd());
-        }
-        else if (strcmp(para[0], "ls") == 0) {
-            int flag = 0;
-            int time = 0;
-            for (int i = 1; i < argc; i++) {
-                if (strcmp(para[i], "-l") == 0) {
-                    flag = 1;
-                    break;
-                }
-                if (strcmp(para[i], "-lc") == 0) {
-                    // modifaction time
-                    time = 1;
-                    break;
-                }
-                if (strcmp(para[i], "-lu") == 0) {
-                    // access time
-                    time = 2;
-                    break;
-                }
-            }
-            mls(argc, para, flag, time);
-        }
-        else if (strcmp(para[0], "rm") == 0) {
-            int flag = 0;       // flag - 0: ask users normally, default
-                                // flag - 1: do not ask users normally
-                                // flag - 2: recursive and ask users
-                                // flag - 3: recursive and do not ask users
-            for (int i = 1; i < argc; i++) {
-                if (strcmp(para[i], "-r") == 0) {
-                    flag = 2;
-                    break;
-                }
-                else if (strcmp(para[i], "-f") == 0) {
-                    flag = 1;
-                    break;
-                }
-                else if (strcmp(para[i], "-rf") == 0) {
-                    flag = 3;
-                    break;
-                }
-            }
-            mrm(argc, para, flag);
-        }
-        else if (strcmp(para[0], "mkdir") == 0) {
-            // choose the -p model for the command
-            // in order to fix the path, append the character '/'
-            int flag = 0;
-            for (int i = 1; i < argc; i++) {
-                if (strcmp(para[i], "-p") == 0) {
-                    flag = 1;
-                    break;
-                }
-            }
-            mmkdir(argc, para, flag);
-        }
-        else if (strcmp(para[0], "cp") == 0) {
-            // cp, use libmcp.a as the lib
-            mcp(argc, para);
-        }
-        else if (strcmp(para[0], "mv") == 0) {
-            // mv, use mcp and mrm
-            // cp to copy the file (regular file, dir file)
-            // mcp(argc, para);
-            // mrm to delete the file, only delete the source file
-            mrm(2, para, 3);
-        }
-        else if (strcmp(para[0], "history") == 0) {
-            // read the .bash_history file to show the history
-            read_history(argc, argv, his);
-        }
-        else if (strcmp(para[0], "cat") == 0) {
-            cat(argc, para);
-        }
-        else if (strcmp(para[0], "touch") == 0) {
-            int access = 0;
-            int modifaction = 0;
-            for (int i = 1; i < argc; i ++) {
-                if (strcmp(para[i], "-a") == 0) access = 1;continue;
-                if (strcmp(para[i], "-m") == 0) modifaction = 1;continue;
-            }
-            touch(argc, para, access, modifaction);
-        }
-        else if (strcmp(para[0], "time") == 0) {
-            mtime(argc, para);
-        }
-        else if (strcmp(para[0], "j") == 0) {
-            if (argc != 2) {
-                printf(ANSI_COLOR_RED "Wrong paramter!\n" ANSI_COLOR_RESET);
-                continue;
-            }
+        forargc = 0;        // ready for count the argv in the pipe or freopen
+        int flag_pre = 0;   // record the |
 
-            // purge or jump 
-            if (strcmp(para[1], "--purge") == 0) myjump(2, WORK_PATH, para[1]);
-            else if (strcmp(para[1], "-s") == 0) myjump(3, WORK_PATH, para[1]);
-            else myjump(0, WORK_PATH, para[1]);
+        // need to check 
+        
+        for (int i = 0; i < argc; i++) {
+            // check the `|` or `>` in the command
+            if (strcmp(para[i], "|") == 0) {
+                // the pipeline case
+                // stdout redirection and reply
+                // write the content into the file `.log`
+
+                if (flag_pre == 0) {
+                    redirection_stdout("./log");
+                    core(cmd, forargc, forpara, his);
+                    backup_stdout();
+                }
+                else {
+                    redirection_stdout("./log");
+                    redirection_stdin("./log");
+                    core(cmd, forargc, forpara, his);
+                    backup_stdin();
+                    backup_stdout();
+                }
+
+                flag_pre += 1;
+
+                // clear the memory
+                for (int j = 0; j < forargc; j++) {
+                    free(forpara[j]);
+                }
+                forargc = 0;
+            }
+            else {
+                // normal case
+                forpara[forargc] = (char*) malloc (sizeof(char) * MAX_LENGTH);
+                strcpy(forpara[forargc], para[i]);
+                forargc ++;
+            }
         }
-        else if (strcmp(para[0], "exit") == 0) exit(0);
-        else {
-            if (strlen(cmd) == 1) help();
-            // execute the system function to help using this shell
-            else system(cmd);
+        if (forargc != 0) {
+            if (flag_pre == 0) {
+                core(cmd, forargc, forpara, his);
+            }
+            else {
+                // need to redir stdin, do not need to redir stdout
+                redirection_stdin("./log");
+                core(cmd, forargc, forpara, his);
+                backup_stdin();
+            }
         }
     }
     return 0;

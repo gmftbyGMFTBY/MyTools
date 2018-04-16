@@ -248,3 +248,196 @@
   2	ls
   3	exit
   2	exit
+  1	
+  2	clear
+  3	ls
+  4	j study
+  5	j exp
+  6	j study
+  7	j nihao
+  8	j exp
+  9	j downlo
+  10	ls
+  11	ls
+  12	j final
+  13	exit
+  1	ls 
+  2	ls -l
+  3	cd test
+  4	ls
+  5	ls -l
+  6	cat test.	
+  7	cat test.c
+  8	exit
+  1	ls
+  2	cat .autojump
+  3	j study
+  4	ls
+  5	cd NLP
+  6	ls
+  7	cd HMM
+  8	ls
+  9	ls -l
+  10	cd ..
+  11	ls
+  12	cd ..
+  13	ls
+  14	cd ..
+  15	ls
+  16	cd AI
+  17	ls
+  18	ls -l
+  19	cd codde
+  20	cd code
+  21	ls
+  22	cd visualisation
+  23	ls
+  24	ls -l
+  25	cat visual.py
+  26	j --purge
+  27	j exp3
+  28	cat .autojump
+  29	j visual
+  30	j exp3
+  31	cat .autojump
+  32	exit
+  1	ls
+  2	ls -l
+  3	cd test
+  4	ls
+  5	du
+  6	du -h
+  7	cd ..
+  8	l
+  9	ls
+  10	exit
+  1	ls
+  1	ls
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	
+  1	ls -l
+  2	ls -l
+  3	cat myjump.c
+  4	ls
+  5	exit
+  1	ls -l
+  2	cd test
+  3	ls
+  4	j nihao
+  5	ls
+  6	j exp3
+  7	ls
+  8	cat main.c
+  9	ls
+  10	exit
+  1	ls -l
+  1	ls -l
+  1	ls -l
+  2	exit
+  1	ls -l
+  2	
+  3	
+  4	
+  5	
+  6	
+  7	
+  8	
+  9	
+  10	sds
+  11	dsdsd
+  12	sd
+  13	s
+  14	ds
+  15	d
+  16	sd
+  17	s
+  18	d
+  19	s
+  20	ds
+  21	d
+  22	dd
+  1	ls
+  2	exit
+  1	ls -l
+  2	exit
+  1	ls -l
+  2	exit
+  3	exit
+  4	exit
+  1	ls -l
+  2	exit
+  1	ls -l
+  2	exit
+  1	ls -l
+  2	exit
+  1	ls -l
+  2	exit
+  1	ls -l
+  2	exit
+  1	ls -l
+  2	exit
+  1	ls -l
+  2	exit
+  3	exit
+  4	exit
+  5	exit
+  6	exit
+  1	cat
+  2	ls
+  3	ls
+  4	exit
+  5	ls
+  1	ls
+  2	exit
+  1	ls
+  2	ls -l
+  3	cat main.c
+  4	ls
+  5	cd test
+  6	ls
+  7	exit
+  1	ls -l
+  2	exit
