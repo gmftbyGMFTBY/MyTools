@@ -4,3 +4,28 @@
   4	exit
   5	ls -l
   6	exit
+  7	ls
+  8	ls -l
+  9	cat 
+  10	clear
+  11	ls
+  12	ls -l
+  13	cd test
+  14	ls
+  15	cd a
+  16	ls
+  17	ls -l
+  18	rm 10 11 9
+  19	ls
+  20	cat 6 7
+  21	ls -l | cat > 8 > 9
+  22	ls
+  23	cat 8
+  24	cat 9
+  25	ls
+  26	exit
+  27	
+  28	help touch
+  29	help ls
+  30	help cd
+  31	exit
