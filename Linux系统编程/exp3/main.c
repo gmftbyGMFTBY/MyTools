@@ -461,7 +461,12 @@ void mmkdir(int argc, char* argv[], int flag)
 int write_history(char* cmd, int count, char* his) 
 {
     FILE* fd;
-    fd = fopen(his, "a+");
+    fd = fopen(his, "r+");
+    count = 1;
+    char data[MAX_LENGTH];
+    while (fgets(data, sizeof(data), fd)) {
+        count ++;
+    }
     fprintf(fd, "  %d\t%s\n", count, cmd);
     fclose(fd);
 }
