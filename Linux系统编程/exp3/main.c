@@ -25,6 +25,8 @@
 // save the stdout filenumber
 int save_fdw = 0;
 int save_fdr = 0;
+int detect = 0;     // decete the status of running the core, -1
+char oldpath[MAX_LENGTH];   // save the oldpath before chdir 
 
 // define the time struct
 struct utimebuf {
@@ -34,7 +36,12 @@ struct utimebuf {
 
 char* pwd()
 {
-    return getcwd(NULL, 0);
+    char* p = getcwd(NULL, 0);
+    if (p == NULL) {
+        detect = -1;
+        return NULL;
+    }
+    else return p;
 }
 
 void cd(char* argv)
@@ -44,9 +51,21 @@ void cd(char* argv)
     strcpy(pause, argv);
     myjump(1, WORK_PATH, pause);
 
-    if (chdir(argv) == -1) {
-        perror("chdir");
+    if (strcmp(argv, "-") == 0) {
+        // back to the oldpath
+        char* pause = (char*) malloc (sizeof(char) * MAX_LENGTH);
+        strcpy(pause, pwd());
+        chdir(oldpath);
+        strcpy(oldpath, pause);
         return ;
+    }
+    else {
+        strcpy(oldpath, pwd());
+        if (chdir(argv) == -1) {
+            perror("chdir");
+            detect = -1;
+            return ;
+        }
     }
 }
 
@@ -72,31 +91,34 @@ void touch(int argc, char* argv[], int acc, int modifaction)
             }
 
             int fd;
-            if (acc || (!acc && !modifaction)) {
+            if (acc) {
                 // default is access status
                 if (!S_ISDIR(buf.st_mode)) {
                     if ((fd = open(argv[i], O_RDONLY | O_TRUNC)) < 0) {
                         perror("open");
                         continue;
                     }
+                    close(fd);
                 }
                 else {
-                    if ((dir = opendir(argv[i])) < 0) {
+                    printf("change the dir!\n");
+                    if ((dir = opendir(argv[i])) == NULL) {
                         perror("opendir");
                         continue;
                     }
                     closedir(dir);
                 }
             }
-            else if (modifaction){
+            else if (modifaction || (!acc && !modifaction)){
                 if (!S_ISDIR(buf.st_mode)) {
                     if ((fd = open(argv[i], O_RDWR | O_TRUNC)) < 0) {
                         perror("open");
                         continue;
                     }
+                    close(fd);
                 }
                 else {
-                    if ((dir = opendir(argv[i])) < 0) {
+                    if ((dir = opendir(argv[i])) == NULL) {
                         perror("opendir");
                         continue;
                     }
@@ -104,7 +126,6 @@ void touch(int argc, char* argv[], int acc, int modifaction)
                 }
             }
             
-            close(fd);
             timebuf.actime  = buf.st_atime;
             timebuf.modtime = buf.st_mtime;
 
@@ -126,6 +147,7 @@ void cat(int argc, char* argv[])
         if (access(argv[i], F_OK) == -1) {
             // file do not exist
             perror("access");
+            detect = -1;
             continue;
         }
 
@@ -212,6 +234,7 @@ void ls(int count, char* argv[], int flag, int time)
         // file not exist case
         if (access(argv[i], F_OK) == -1) {
             // perror("access");
+            detect = -1;
             continue;
         }
 
@@ -359,6 +382,7 @@ void delete_file(char* filename, int flag)
 
     else {
         if (flag == 0 || flag == 1) {
+            detect = -1;
             printf("Can not delete the dir by rm, need -r paramter\n");
             return ;
         }
@@ -397,6 +421,7 @@ void mrm(int argc, char* argv[], int flag)
             delete_file(argv[i], flag);
         }
         else {
+            detect = -1;
             printf("rm: cannot remove '%s': No such file or directory\n", argv[i]);
         }
     }
@@ -409,6 +434,7 @@ void mmkdir(int argc, char* argv[], int flag)
             if (mkdir(argv[i], 0777) == -1) {
                 // the execute permission for the dia should added, else false to create
                 // the file or dir, even change into this dirname will be wrong!
+                detect = -1;
                 perror("mkdir");
                 printf("create %s dir error!\n", argv[i]);
             }
@@ -460,6 +486,9 @@ void mmkdir(int argc, char* argv[], int flag)
 
 int write_history(char* cmd, int count, char* his) 
 {
+    // do not record the command which is empty
+    if (strlen(cmd) <= 1) return -1;
+
     FILE* fd;
     fd = fopen(his, "r+");
     count = 1;
@@ -486,12 +515,27 @@ int read_history(int argc, char* his)
 
 int analyse(char* cmd, char* para[])
 {
-    strcat(cmd, " \0");
     int head = 0;
     int flag = 0;       // 1 - ' ' before
     char registe[MAX_LENGTH];
     int point = 0;
     int i;
+
+    // clean the cmd string
+    char help[MAX_LENGTH];
+    int help_index = 0;
+    memset(help, '\0', sizeof(help));
+    for (i = 0; i < strlen(cmd); i ++) {
+        if (cmd[i] == ' ' || cmd[i] == '\t') {
+            help_index ++;
+        }
+        else break;
+    }
+
+    strcpy(cmd, cmd + help_index);
+
+    strcat(cmd, " \0");
+
     for (i = 0; i < strlen(cmd); i++) {
         if (cmd[i] == ' ' && flag) {
             continue;
@@ -518,6 +562,7 @@ void help()
     // print the help menu
     printf(ANSI_COLOR_RED "Help Menu:\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "  1.  cd      - change dir\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "      * -: change to the oldpath\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "  2.  ls      - list the path\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "      * -l: show more message\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "      * -lu: show access message\n" ANSI_COLOR_RESET);
@@ -547,6 +592,9 @@ void help()
 
 int core(char* cmd, int argc, char* para[], char* his)
 {
+    // init the decete flag
+    detect = 0;
+
     if (strcmp(para[0], "cd") == 0) cd(para[1]);
     else if (strcmp(para[0], "pwd") == 0) {
         printf("%s\n", pwd());
@@ -555,12 +603,7 @@ int core(char* cmd, int argc, char* para[], char* his)
         int flag = 0;
         int time = 0;
         for (int i = 1; i < argc; i++) {
-            if (strcmp(para[i], "-l") == 0) {
-                flag = 1;
-                break;
-            }
-            if (strcmp(para[i], "-lc") == 0) {
-                // modifaction time
+            if (strcmp(para[i], "-l") == 0 || strcmp(para[i], "-lc") == 0) {
                 time = 1;
                 break;
             }
@@ -726,9 +769,6 @@ int main(int argc, char* argv[])
         gets(cmd);
         his_count ++;
 
-        // append into .history 
-        write_history(cmd, his_count, his);
-
         argc = analyse(cmd, para);
         forargc = 0;        // ready for count the argv in the pipe or freopen
         int flag_pre = 0;   // record the |
@@ -744,16 +784,16 @@ int main(int argc, char* argv[])
             if (strcmp(para[i], "|") == 0) {
                 // the pipeline case
                 // stdout redirection and reply
-                // write the content into the file `.log`
+                // write the content into the file `/tmp/log`
 
                 if (flag_pre == 0) {
-                    redirection_stdout("./log");
+                    redirection_stdout("/tmp/log");
                     core(cmd, forargc, forpara, his);
                     backup_stdout();
                 }
                 else {
-                    redirection_stdout("./log");
-                    redirection_stdin("./log");
+                    redirection_stdout("/tmp/log");
+                    redirection_stdin("/tmp/log");
                     core(cmd, forargc, forpara, his);
                     backup_stdin();
                     backup_stdout();
@@ -771,7 +811,7 @@ int main(int argc, char* argv[])
                 if (flag_pre != 0) {
                     // ls -l | cat < 6, error usage
                     printf(ANSI_COLOR_RED "Error Usage!\n" ANSI_COLOR_RESET);
-                    unlink("./log");
+                    unlink("/tmp/log");
                     wrong = 1;
                     break;
                 }
@@ -790,16 +830,16 @@ int main(int argc, char* argv[])
             }
             else if (strcmp(para[i], ">") == 0) {
                 i ++;
+                flag_redw = 1;
                 if (flag_pre == 0) {
                     // cat 6 > 8
-                    flag_redw = 1;
                     redirection_stdout(para[i]);
                     core(cmd, forargc, forpara, his);
                     backup_stdout();
                 }
                 else {
                     // ls -l | cat > 8
-                    redirection_stdin("./log");
+                    redirection_stdin("/tmp/log");
                     redirection_stdout(para[i]);
                     core(cmd, forargc, forpara, his);
                     backup_stdin();
@@ -814,22 +854,25 @@ int main(int argc, char* argv[])
             }
         }
 
+        // run the core fai, do not need to write into history
         if (wrong) continue;
 
         if (flag_pre != 0) {
             // need to redir stdin, do not need to redir stdout
-            redirection_stdin("./log");
+            redirection_stdin("/tmp/log");
             if (flag_redw == 0) core(cmd, forargc, forpara, his);
-            core(cmd, forargc, forpara, his);
             backup_stdin();
         }
         else {
             if (flag_redw == 0) core(cmd, forargc, forpara, his);
         }
+        
+        if (detect != -1) 
+            write_history(cmd, his_count, his);     // append into the history file
 
         if (flag_pre != 0) {
-            // does exist the piepline in the command, delete the file ./log
-            if (unlink("./log")) {
+            // does exist the piepline in the command, delete the file /tmp/log
+            if (unlink("/tmp/log")) {
                 perror("unlink");
             }
         }

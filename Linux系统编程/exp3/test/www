@@ -1,0 +1,15 @@
+./:
+  a.out
+  libmcp.a
+  libmtime.a
+  libmyjump.a
+  main.c
+  makefile
+  mycp.c
+  mycp.o
+  myjump.c
+  myjump.o
+  mytime.c
+  mytime.o
+  test
+

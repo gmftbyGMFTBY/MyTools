@@ -1,5 +1,5 @@
 a.out: main.c libmcp.a libmtime.a libmyjump.a
-	gcc main.c -lmcp -lmtime -lmyjump -I. -L. -o a.out
+	gcc -g main.c -lmcp -lmtime -lmyjump -I. -L. -o a.out
 libmcp.a: mycp.o
 	ar crs libmcp.a mycp.o
 libmtime.a: mytime.o
