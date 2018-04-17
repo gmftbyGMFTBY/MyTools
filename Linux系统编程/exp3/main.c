@@ -101,7 +101,6 @@ void touch(int argc, char* argv[], int acc, int modifaction)
                     close(fd);
                 }
                 else {
-                    printf("change the dir!\n");
                     if ((dir = opendir(argv[i])) == NULL) {
                         perror("opendir");
                         continue;
@@ -264,7 +263,8 @@ void ls(int count, char* argv[], int flag, int time)
 
                 if (flag == 0) {
                     if (entry->d_name[0] == '.') continue;
-                    printf("  %s\n", entry->d_name);
+                    if (S_ISDIR(buf.st_mode)) printf(ANSI_COLOR_BLUE "  %s\n" ANSI_COLOR_RESET, entry->d_name);
+                    else printf("  %s\n", entry->d_name);
                 }
                 else if (flag == 1) {
                     // mode
@@ -693,7 +693,7 @@ int core(char* cmd, int argc, char* para[], char* his)
     else {
         if (strlen(cmd) == 1) help();
         // execute the system function to help using this shell
-        else system(cmd);
+        else if(system(cmd) != 0) detect = -1;
     }
 }
 
