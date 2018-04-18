@@ -2,3 +2,46 @@
   2	ls 
   3	cd test 
   4	ls 
+  5	ls 
+  6	j test 
+  7	ls 
+  8	j nihao 
+  9	ls 
+  10	history 
+  11	history 
+  12	clear 
+  13	ls 
+  14	ls -l 
+  15	j -d 
+  16	j --databse 
+  17	j -s 
+  18	j --purge 
+  19	ls 
+  20	cd test 
+  21	pwd 
+  22	history 
+  23	cd .. 
+  24	j study 
+  25	ls 
+  26	cd Python 
+  27	ls 
+  28	cd NLTK 
+  29	ls 
+  30	j -s 
+  31	cd .. 
+  32	ls 
+  33	j Desk 
+  34	ls 
+  35	j ai 
+  36	ls 
+  37	j Linux 
+  38	ls 
+  39	ls 
+  40	tree  
+  41	tree /home/lantian/ssr 
+  42	tree  
+  43	tree /home/lantian/ssr 
+  44	tree /home/lantian/ssr -d 
+  45	tree /home/lantian/ssr -l 
+  46	tree /home/lantian/ssr -d 2 
+  47	tree /home/lantian/ssr 

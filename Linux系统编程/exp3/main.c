@@ -587,6 +587,9 @@ void help()
     printf(ANSI_COLOR_RED "  13. j       - autojump to the dir you want\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "      * --purge: clean the database\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "      * -s: show the database\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "  14. tree    - show the directory tree\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "      * -d [n]: show n level of the directory tree\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "      * -l: show only the directory file\n" ANSI_COLOR_RESET);
     return ;
 }
 
@@ -688,6 +691,9 @@ int core(char* cmd, int argc, char* para[], char* his)
         if (strcmp(para[1], "--purge") == 0) myjump(2, WORK_PATH, para[1]);
         else if (strcmp(para[1], "-s") == 0) myjump(3, WORK_PATH, para[1]);
         else myjump(0, WORK_PATH, para[1]);
+    }
+    else if (strcmp(para[0], "tree") == 0) {
+        int res = mytree(argc, para);
     }
     else if (strcmp(para[0], "exit") == 0) exit(0);
     else {
