@@ -45,3 +45,15 @@
   45	tree /home/lantian/ssr -l 
   46	tree /home/lantian/ssr -d 2 
   47	tree /home/lantian/ssr 
+  48	ls 
+  49	tree test 
+  50	tree  
+  51	tree ../.. 
+  52	tree . 
+  53	tree ../.. 
+  54	tree ../.. > 2 
+  55	ls 
+  56	tree | cat 
+  57	tree | cat > 2 > 3 
+  58	ls 
+  59	cat 2 3 
