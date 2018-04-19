@@ -21,12 +21,12 @@ int delete_file(char* filename, int flag)
         printf("Do you want to rerun ( rm %s ) and permit these operations? [y/N] ", filename);
         char res[10];
         gets(res);
-        if (res[0] != 'y') return;
+        if (res[0] != 'y') return 0;
     }
 
     if (!S_ISDIR(buf.st_mode)) {
         unlink(filename);
-        return;
+        return 1;
     }
 
     else {
