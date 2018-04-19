@@ -114,3 +114,38 @@
   114	touch a 
   115	ls 
   116	tree 
+  117	ls 
+  118	ls -l 
+  119	cd test 
+  120	ls 
+  121	ls -l 
+  122	cd b 
+  123	cd .. 
+  124	ls 
+  125	ls b 
+  126	j --purge 
+  127	ls 
+  128	j -s 
+  129	mkdir c 
+  130	ls 
+  131	cd c 
+  132	ls 
+  133	cd .. 
+  134	ls 
+  135	j -s 
+  136	ls 
+  137	rm c 
+  138	ls 
+  139	rm -r c 
+  140	ls 
+  141	j --purge 
+  142	j -s 
+  143	ls 
+  144	cd .. 
+  145	ls 
+  146	ls 
+  147	cd test 
+  148	ls 
+  149	ls -l 
+  150	touch a 
+  151	ls -l 

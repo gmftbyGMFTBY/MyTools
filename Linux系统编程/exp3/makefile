@@ -1,5 +1,5 @@
-a.out: main.c libmycp.so libmytime.so libmyjump.so libmytree.so libmyrm.so libmytouch.so
-	gcc -g main.c -lmytouch -lmycp -lmytime -lmyjump -lmytree -lmyrm -I. -L. -o a.out
+a.out: main.c libmycp.so libmytime.so libmyjump.so libmytree.so libmyrm.so libmytouch.so libmyls.so
+	gcc -g main.c -lmytouch -lmycp -lmytime -lmyjump -lmytree -lmyrm -lmyls -I. -L. -o a.out
 libmycp.so: mycp.c
 	gcc --shared -fPIC -o libmycp.so mycp.c
 libmytime.so: mytime.c
@@ -12,5 +12,7 @@ libmyrm.so: myrm.c
 	gcc --shared -fPIC -o libmyrm.so myrm.c
 libmytouch.so: mytouch.c
 	gcc --shared -fPIC -o libmytouch.so mytouch.c
+libmyls.so: myls.c
+	gcc --shared -fPIC -o libmyls.so myls.c
 clean:
-	rm a.out libmycp.so libmytime.so libmyjump.so libmytree.so libmyrm.so libmytouch.so
+	rm a.out libmycp.so libmytime.so libmyjump.so libmytree.so libmyrm.so libmytouch.so libmyls.so
