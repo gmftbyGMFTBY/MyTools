@@ -69,73 +69,6 @@ void cd(char* argv)
     }
 }
 
-void touch(int argc, char* argv[], int acc, int modifaction)
-{
-    // touch command try to change the file's timestamps, use current timestamps
-    // If the file do not exist, try to create one
-    // touch can affect the file or the dir, and the system call is [utime]
-    struct stat buf;
-    struct utimbuf timebuf;
-    DIR* dir = NULL;
-    for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "-a") == 0 || strcmp(argv[i], "-m") == 0) continue;
-        if (access(argv[i], F_OK) == -1) {
-            // file do not exist, create one
-            creat(argv[i], 0777);
-            continue;
-        }
-        else {
-            // file exist, change the timestamps - [access time, modifacation time]
-            if (stat(argv[i], &buf)) {
-                perror("stat");
-            }
-
-            int fd;
-            if (acc) {
-                // default is access status
-                if (!S_ISDIR(buf.st_mode)) {
-                    if ((fd = open(argv[i], O_RDONLY | O_TRUNC)) < 0) {
-                        perror("open");
-                        continue;
-                    }
-                    close(fd);
-                }
-                else {
-                    if ((dir = opendir(argv[i])) == NULL) {
-                        perror("opendir");
-                        continue;
-                    }
-                    closedir(dir);
-                }
-            }
-            else if (modifaction || (!acc && !modifaction)){
-                if (!S_ISDIR(buf.st_mode)) {
-                    if ((fd = open(argv[i], O_RDWR | O_TRUNC)) < 0) {
-                        perror("open");
-                        continue;
-                    }
-                    close(fd);
-                }
-                else {
-                    if ((dir = opendir(argv[i])) == NULL) {
-                        perror("opendir");
-                        continue;
-                    }
-                    closedir(dir);
-                }
-            }
-            
-            timebuf.actime  = buf.st_atime;
-            timebuf.modtime = buf.st_mtime;
-
-            if (utime(argv[i], &timebuf) < 0) {
-                perror("utime");
-                continue;
-            }
-        }
-    }
-}
-
 void cat(int argc, char* argv[])
 {
     // cat function try to write the content into the stdout
@@ -362,71 +295,6 @@ void mls(int argc, char* argv[], int flag, int time)
     }
 }
 
-void delete_file(char* filename, int flag)
-{
-    // remember to chdir before unlink the file
-    struct stat buf;
-    int res = stat(filename, &buf);
-
-    if (flag == 0 || flag == 2) {
-        printf("Do you want to rerun ( rm %s ) and permit these operations? [y/N] ", filename);
-        char res[10];
-        gets(res);
-        if (res[0] != 'y') return;
-    }
-
-    if (!S_ISDIR(buf.st_mode)) {
-        unlink(filename);
-        return;
-    }
-
-    else {
-        if (flag == 0 || flag == 1) {
-            detect = -1;
-            printf("Can not delete the dir by rm, need -r paramter\n");
-            return ;
-        }
-        // dir file
-        DIR* dirptr = NULL;
-        struct dirent* entry = NULL;
-        dirptr = opendir(filename);
-        
-    
-        while (entry = readdir(dirptr)) {
-            if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) {
-                continue;
-            }
-            // change dir
-            chdir(filename);
-            delete_file(entry->d_name, flag);
-            chdir("..");
-        }
-
-        // delete the dir file at last
-        rmdir(filename);
-        return ;
-    }
-}
-
-void mrm(int argc, char* argv[], int flag)
-{
-    /* flag - 0: ask for user normally
-       flag - 1: do not ask for user normally
-       flag - 2: ask for user and recursive
-       flag - 3: do not ask for user and recursive
-     */ 
-    for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "-r") == 0 || strcmp(argv[i], "-f") == 0 || strcmp(argv[i], "-rf") == 0) continue;
-        if (access(argv[i], F_OK) != -1) {
-            delete_file(argv[i], flag);
-        }
-        else {
-            detect = -1;
-            printf("rm: cannot remove '%s': No such file or directory\n", argv[i]);
-        }
-    }
-}
-
 void mmkdir(int argc, char* argv[], int flag)
 {
     if (flag == 0) {
@@ -637,7 +505,7 @@ int core(char* cmd, int argc, char* para[], char* his)
                 break;
             }
         }
-        mrm(argc, para, flag);
+        detect = mrm(argc, para, flag);
     }
     else if (strcmp(para[0], "mkdir") == 0) {
         // choose the -p model for the command
@@ -658,7 +526,7 @@ int core(char* cmd, int argc, char* para[], char* his)
     else if (strcmp(para[0], "mv") == 0) {
         // mv, use mcp and mrm
         // cp to copy the file (regular file, dir file)
-        // mcp(argc, para);
+        mcp(argc, para);
         // mrm to delete the file, only delete the source file
         mrm(2, para, 3);
     }

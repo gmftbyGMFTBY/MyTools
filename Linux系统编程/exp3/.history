@@ -57,3 +57,60 @@
   57	tree | cat > 2 > 3 
   58	ls 
   59	cat 2 3 
+  60	ls 
+  61	cd test 
+  62	ls 
+  63	touch a 
+  64	ls 
+  65	mv a b 
+  66	ls 
+  67	cd b 
+  68	ls 
+  69	cd .. 
+  70	ls 
+  71	ls 
+  72	cd test 
+  73	ls 
+  74	touch a 
+  75	mv a b  
+  76	ls 
+  77	cd b 
+  78	ls 
+  79	ls -l 
+  80	ls 
+  81	j nihao 
+  82	ls 
+  83	tree 
+  84	ls 
+  85	time ls -l 
+  86	ls 
+  87	j nihao 
+  88	ls 
+  89	tree 
+  90	ls 
+  91	j exp3 
+  92	ls 
+  93	ls 
+  94	cd test 
+  95	ls 
+  96	cp b/a . 
+  97	ls 
+  98	tree 
+  99	ls 
+  100	ls 
+  101	cd test 
+  102	ls 
+  103	history 
+  104	ls 
+  105	history 
+  106	ls 
+  107	cd b 
+  108	ls 
+  109	cd .. 
+  110	ls 
+  111	ls 
+  112	cd test 
+  113	ls 
+  114	touch a 
+  115	ls 
+  116	tree 
