@@ -170,3 +170,160 @@
   170	ls -lu 
   171	ls -lc 
   172	ls 
+  173	ls 
+  174	cd test 
+  175	ls 
+  176	mkdir tmp 
+  177	ls 
+  178	tree . 
+  179	ls 
+  180	cd test 
+  181	ls 
+  182	tree . 
+  183	cd test 
+  184	ls 
+  185	tree  
+  186	cd test 
+  187	ls 
+  188	tree 
+  189	rm -rf tmp 
+  190	ls 
+  191	mkdir tmp 
+  192	ls 
+  193	ls 
+  194	cd test 
+  195	ls 
+  196	ls 
+  197	cd test 
+  198	ls 
+  199	tree 
+  200	rm tmp 
+  201	ls 
+  202	cd tmp 
+  203	ls 
+  204	cd ttt 
+  205	cd test 
+  206	ls 
+  207	tree . 
+  208	cd ttt 
+  209	ls 
+  210	rm a.txt 
+  211	ls 
+  212	cd shiyan5 
+  213	ls 
+  214	cd lala 
+  215	ls 
+  216	rm -rf AA 
+  217	ls 
+  218	cd .. 
+  219	ls 
+  220	cd .. 
+  221	ls 
+  222	cd .. 
+  223	ls 
+  224	tree 
+  225	cp ttt tmp 
+  226	ls 
+  227	tree  
+  228	ls 
+  229	cd tmp 
+  230	ls 
+  231	cd ttt 
+  232	ls 
+  233	cd shiyan5 
+  234	ls 
+  235	cd lala 
+  236	ls 
+  237	ls -la 
+  238	ls -l 
+  239	ls 
+  240	j exp3 
+  241	ls 
+  242	cd test 
+  243	ls 
+  244	rm -rf ttt tmp 
+  245	ls 
+  246	ls 
+  247	cd test 
+  248	tree 
+  249	cp b c 
+  250	cp b c 
+  251	ls 
+  252	cp a d 
+  253	ls 
+  254	cp -r b c 
+  255	ls b 
+  256	cp b d 
+  257	cp b k 
+  258	ls 
+  259	tree . 
+  260	cd k 
+  261	ls 
+  262	touch 1 2 3 
+  263	ls 
+  264	mkdir w 
+  265	cd w 
+  266	ls 
+  267	touch 3 4 5 
+  268	ls 
+  269	cd .. 
+  270	ls 
+  271	cd .. 
+  272	ls 
+  273	tree  
+  274	cp k h 
+  275	ls 
+  276	tree . 
+  277	ls 
+  278	cd test 
+  279	tree  
+  280	cp b a 
+  281	tree  
+  282	cd a 
+  283	ls -l 
+  284	cd .. 
+  285	ls 
+  286	ls -l b 
+  287	cd b 
+  288	ls 
+  289	ls -l 
+  290	cd .. 
+  291	ls 
+  292	cd .. 
+  293	ls 
+  294	ls 
+  295	cd test 
+  296	ls 
+  297	cp b a 
+  298	tree 
+  299	tree 
+  300	cp b a 
+  301	ls 
+  302	tree a 
+  303	ls 
+  304	cp b a 
+  305	ls 
+  306	tree  
+  307	ls 
+  308	cp b a 
+  309	ls 
+  310	tree  
+  311	ls 
+  312	tree 
+  313	ls 
+  314	cd test 
+  315	ls 
+  316	cd test 
+  317	ls 
+  318	tree 
+  319	ls 
+  320	cd test 
+  321	ls 
+  322	tree 
+  323	rm -rf a 
+  324	tree 
+  325	rm a.out 
+  326	tree 
+  327	cp ttt a 
+  328	ls 
+  329	tree 

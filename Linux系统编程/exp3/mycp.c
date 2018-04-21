@@ -12,10 +12,12 @@
    实现 mycp 对目录的拷贝,链接文件的追踪(No)
  */
 
-char* check_file_PL(struct stat buf)
+char show[5];
+char filename[20];
+
+void check_file_PL(struct stat buf)
 {
     int mode = buf.st_mode;
-    char* show = (char *)malloc(sizeof(char) * 4);
     show[0] = show[1] = show[2] = show[3] = '0';
 
     switch(S_IRWXU & mode)
@@ -53,14 +55,13 @@ char* check_file_PL(struct stat buf)
         case S_IROTH|S_IWOTH:show[3] = '6';break;  
         default:show[3] = '0';break; 
     }
-    return show;
 }
 
-void change_file_PL(char* path, char* mode)
+void change_file_PL(char* path)
 {
     // 因为是 chmod, 不需要考虑掩码的问题
     // 8 进制转换
-    int n_mode = atoi(mode);
+    int n_mode = atoi(show);
     int mode_u = n_mode / 100;                    //文件所有者权限  
     int mode_g = (n_mode - (mode_u*100))/10;          //所属组权限  
     int mode_o = n_mode - (mode_u*100) - (mode_g*10);      //其他人权限  
@@ -101,7 +102,7 @@ void file2file(char* spath, char* dpath)
     // 查找文件的权限
     struct stat buf;
     int res = stat(spath, &buf);
-    char* pl = check_file_PL(buf);
+    check_file_PL(buf);
 
     int cur;
     while ((cur = read(fdread, &t, 100)) != 0) {
@@ -111,26 +112,26 @@ void file2file(char* spath, char* dpath)
     close(fdread);
     close(fdwrite);
     // 修改文件的权限保持一致
-    change_file_PL(dpath, pl);
+    change_file_PL(dpath);
 }
 
-char* getfilename(char* path)
+void getfilename(char* path)
 {
+    memset(filename, '\0', sizeof(filename));
     int length = strlen(path);
     int i;
-    char* pp = (char*)malloc(sizeof(char) * 100);
+    char* pp = (char*)malloc(sizeof(char) * (strlen(path) + 2));
     strcpy(pp, path);
     int flag = 0;
     for (i = 0; i < length; i++) {
         if (pp[i] == '/') flag = i;
     }
     if (flag != 0) flag += 1;
-    char* res = (char *)malloc(sizeof(char) * 100);
     for (i = 0; i < (length - flag); i++) {
-        res[i] = pp[flag + i];
+        filename[i] = pp[flag + i];
     }
-    res[i] = '\0';
-    return res;
+    filename[i] = '\0';
+    free(pp);
 }
 
 int exist_file(char* path)
@@ -151,7 +152,7 @@ char* get_new_filename(char* filename, char* path)
     else {
         path[length] = '\0';
     }
-    char* res = (char*)malloc(sizeof(char) * strlen(path));
+    char* res = (char*)malloc(sizeof(char) * strlen(path) + 20);
     strcpy(res, path);
     return strcat(res, filename);
 }
@@ -165,10 +166,11 @@ void file2dir(char* spath, char* dpath)
     fdread = open(spath, O_RDONLY);
     fdwrite = open(dpath, O_RDWR);
     // 获取文件名
-    char* filename = getfilename(spath);
+    getfilename(spath);
     char* newfilename = get_new_filename(filename, dpath);
 
     file2file(spath, newfilename);
+    free(newfilename);
 }
 
 void dir2dir(char* spath, char* dpath)
@@ -179,7 +181,6 @@ void dir2dir(char* spath, char* dpath)
     // 子目录的递归
 
     int flag = 0;
-    char* filename;
     char* n_dpath;
     char* m_dpath;
 
@@ -191,22 +192,22 @@ void dir2dir(char* spath, char* dpath)
         // 创建目录并复制权限
         struct stat buf;
         stat(spath, &buf);
-        char* pl = check_file_PL(buf);
+        check_file_PL(buf);
         mkdir(m_dpath, R_OK);
-        change_file_PL(m_dpath, pl);
+        change_file_PL(m_dpath);
         flag = 0;
     }
     else {
         // 在目标目录下创建目录
         struct stat buf;
         stat(spath, &buf);
-        char* pl = check_file_PL(buf);
+        check_file_PL(buf);
 
         // 新的目录的路径生成
-        filename = getfilename(spath);
+        getfilename(spath);
         n_dpath = get_new_filename(filename, dpath);
         mkdir(n_dpath, R_OK);
-        change_file_PL(n_dpath, pl);
+        change_file_PL(n_dpath);
         flag = 1;
     }
 
@@ -244,6 +245,7 @@ void dir2dir(char* spath, char* dpath)
             }
         }
     }
+    closedir(dirptr);
 }
 
 int mcp(int argc, char* argv[])
