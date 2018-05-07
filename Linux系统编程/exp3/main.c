@@ -356,6 +356,15 @@ int core(char* cmd, int argc, char* para[], char* his)
         int res = myfind(argc, para);
         if (res == -1) detect = -1;
     }
+    else if (strcmp(para[0], "du") == 0) {
+        detect = du(argc, para);
+    }
+    else if (strcmp(para[0], "grep") == 0) {
+        grep(argc, para);
+    }
+    else if (strcmp(para[0], "nano") == 0) {
+        nano(argc, para);
+    }
     else if (strcmp(para[0], "exit") == 0) exit(0);
     else {
         if (strlen(cmd) == 1) help();

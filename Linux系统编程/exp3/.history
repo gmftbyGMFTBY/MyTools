@@ -514,3 +514,111 @@
   514	ls 
   515	find . -ctime -1 a 
   516	find . -ctime -0 a 
+  517	ls 
+  518	ls 
+  519	ls 
+  520	ls 
+  521	ls 
+  522	ls 
+  523	du -h . 
+  524	ls 
+  525	vim mexit 
+  526	du -h . 
+  527	du -h . 
+  528	du . 
+  529	ls 
+  530	ls 
+  531	du 
+  532	du -h . 
+  533	du -h . 
+  534	du -Bb 
+  535	du -BM 
+  536	du -bm 
+  537	du -b 
+  538	ls 
+  539	du -h . 
+  540	du -Bb . 
+  541	du -BK . 
+  542	du -BK -a 
+  543	ls 
+  544	cd .. 
+  545	ls 
+  546	ls 
+  547	cd os 
+  548	ls 
+  549	cd mydu 
+  550	ls 
+  551	cat du 
+  552	cat a.out 
+  553	cat du.c 
+  554	grep -c "不仅" du.c 
+  555	grep -c "return" du.c 
+  556	grep -c return du.c 
+  557	ls 
+  558	grep return os/mydu/du.c 
+  559	grep -c return os/mydu/du.c 
+  560	ls 
+  561	ls 
+  562	cd os 
+  563	ls 
+  564	ls 
+  565	ls 
+  566	grep return os/mydu/du.c 
+  567	grep return os/mydu/du.c -c 
+  568	grep -n return os/mydu/du.c 
+  569	ls 
+  570	grep return os/mydu/du.c -c 
+  571	ls 
+  572	cd test 
+  573	ls 
+  574	cd a/a/a 
+  575	ls 
+  576	nano lantian 
+  577	ls 
+  578	cd test 
+  579	ls 
+  580	cd a/a/a 
+  581	ls 
+  582	nano 
+  583	cd test 
+  584	cd a/a/a 
+  585	ls 
+  586	cd test 
+  587	ls 
+  588	cd test 
+  589	ls 
+  590	cd a/a/a 
+  591	ls 
+  592	cd test/a/a/a 
+  593	ls 
+  594	nano test/a/a/a/lantian 
+  595	ls 
+  596	ls 
+  597	cd test/a/a/a 
+  598	ls 
+  599	cat lantian 
+  600	ls 
+  601	nano lantian 
+  602	cd test/a/a/a 
+  603	nano test/a/a/a/lantian 
+  604	nano test/a/a/a/lantian 
+  605	ls 
+  606	nano fuckyou 
+  607	nano file 
+  608	nano file 
+  609	nano file 
+  610	ls 
+  611	nano test/a/a/a/1.txt 
+  612	ls 
+  613	nano file 
+  614	cat file 
+  615	nano file 
+  616	ls 
+  617	cat file 
+  618	ls 
+  619	nano test/a/a/a/lantian 
+  620	ls 
+  621	nano test/a/a/a/1.txt 
+  622	ls 
+  623	ls 
+  624	ls 
