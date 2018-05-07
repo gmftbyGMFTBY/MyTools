@@ -89,9 +89,6 @@ void mmkdir(int argc, char* argv[], int flag)
                 perror("mkdir");
                 printf("create %s dir error!\n", argv[i]);
             }
-            else {
-                printf("create %s dir successfully!\n", argv[i]);
-            }
         }
     }
     else {
@@ -240,7 +237,16 @@ void help()
     printf(ANSI_COLOR_RED "      * -s: show the database\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "  14. tree    - show the directory tree\n" ANSI_COLOR_RESET);
     printf(ANSI_COLOR_RED "      * -d [n]: show n level of the directory tree\n" ANSI_COLOR_RESET);
-    printf(ANSI_COLOR_RED "      * -l: show only the directory file\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "      * -l: show only the directory file\n" ANSI_COLOR_RESET); 
+    printf(ANSI_COLOR_RED "  15. find    - find the file under the path with the regex\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "      * -name: find with the file name\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "        find path -name file_name(support the regex)\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "      * -prune: find all the file except the special\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "        find path -prune file_name(support the regex)\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "      * -ctime: find all the file within the times\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "        find path -ctime -1 file_name\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "      * -print: find all the files under the path\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_RED "        find path -print\n" ANSI_COLOR_RESET);
     return ;
 }
 
@@ -345,6 +351,10 @@ int core(char* cmd, int argc, char* para[], char* his)
     }
     else if (strcmp(para[0], "tree") == 0) {
         int res = mytree(argc, para);
+    }
+    else if (strcmp(para[0], "find") == 0) {
+        int res = myfind(argc, para);
+        if (res == -1) detect = -1;
     }
     else if (strcmp(para[0], "exit") == 0) exit(0);
     else {

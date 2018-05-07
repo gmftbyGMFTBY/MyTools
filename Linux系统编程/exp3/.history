@@ -327,3 +327,190 @@
   327	cp ttt a 
   328	ls 
   329	tree 
+  330	ls 
+  331	cd test 
+  332	ls 
+  333	cp ttt a 
+  334	ls 
+  335	tree  
+  336	ls 
+  337	ls 
+  338	cd test 
+  339	ls 
+  340	cd a 
+  341	ls 
+  342	cd .. 
+  343	ls 
+  344	tree 
+  345	ls 
+  346	cp ttt a 
+  347	ls 
+  348	tree . 
+  349	ls 
+  350	cd test 
+  351	ls 
+  352	ls 
+  353	cd test 
+  354	ls 
+  355	rerm a.out 
+  356	ls 
+  357	cd /tmp 
+  358	ls 
+  359	cd recyclebin 
+  360	ls 
+  361	vim record 
+  362	ls 
+  363	cd .. 
+  364	ls 
+  365	rm recyclebin 
+  366	rm -r recyclebin 
+  367	ls 
+  368	j exp3 
+  369	ls 
+  370	cd test 
+  371	ls 
+  372	rerm a.out 
+  373	j tmp 
+  374	ls 
+  375	cd /tmp 
+  376	ls 
+  377	cd recyclebin 
+  378	ls 
+  379	vim record 
+  380	ls 
+  381	j exp3 
+  382	ls 
+  383	cd test 
+  384	ls 
+  385	ls 
+  386	cd test 
+  387	ls 
+  388	rerm a.out 
+  389	j /tmp 
+  390	ls 
+  391	cd /tmp 
+  392	ls 
+  393	cd recyclebin 
+  394	ls 
+  395	cat record 
+  396	ls 
+  397	cd test 
+  398	ls 
+  399	rerm a.out 
+  400	cd /tmp 
+  401	ls 
+  402	cd recyclebin 
+  403	ls 
+  404	cat record 
+  405	cd .. 
+  406	ls 
+  407	rm -rf recyclebin 
+  408	ls 
+  409	j exp3 
+  410	ls 
+  411	cd test 
+  412	ls 
+  413	rerm a.out 
+  414	cd /tmp 
+  415	ls 
+  416	cd recyclebin 
+  417	ls 
+  418	cat record 
+  419	ls 
+  420	rm -rf /tmp/recyclebin 
+  421	ls 
+  422	j exp3 
+  423	ls 
+  424	ls 
+  425	cd test 
+  426	ls 
+  427	rerm a.out 
+  428	ls 
+  429	cd test 
+  430	ls 
+  431	rerm a.out 
+  432	ls 
+  433	cd test 
+  434	ls 
+  435	ls 
+  436	ls 
+  437	ls 
+  438	ls 
+  439	cd test 
+  440	ls 
+  441	ls 
+  442	ls 
+  443	mkdir test 
+  444	ls 
+  445	cd test 
+  446	ls 
+  447	ls 
+  448	ls 
+  449	cd .. 
+  450	ls 
+  451	cd - 
+  452	ls 
+  453	cd - 
+  454	ls 
+  455	ls 
+  456	cd test 
+  457	ls 
+  458	mkdir -p a/a/a/a 
+  459	ls 
+  460	tree 
+  461	cp a b 
+  462	ls 
+  463	tree 
+  464	cd a/a/a 
+  465	ls 
+  466	touch lantian 
+  467	cd ../../.. 
+  468	ls 
+  469	tree 
+  470	find . -name lantian 
+  471	find . -prune lantian 
+  472	ls 
+  473	cd a/a/ 
+  474	ls 
+  475	cd a 
+  476	ls 
+  477	touch 1.txt 2.txt 3.txt 4.txt 
+  478	ls 
+  479	cd ../../.. 
+  480	ls 
+  481	tree  
+  482	ls 
+  483	cd test 
+  484	ls 
+  485	tree 
+  486	find . -name ?.txt 
+  487	find . -name .?.txt 
+  488	ls 
+  489	find . -prune lantian 
+  490	ls 
+  491	ls 
+  492	cd test 
+  493	ls 
+  494	find . -print 
+  495	find . -ctime -1 
+  496	find . -ctime -2 
+  497	cd a/a/a 
+  498	ls 
+  499	echo "i am lantian" > lantian 
+  500	cat lantian 
+  501	ls 
+  502	cd ../../.. 
+  503	ls 
+  504	find . -ctime -1  
+  505	ls 
+  506	cd test 
+  507	ls 
+  508	cd a 
+  509	cd a/a/ 
+  510	ls 
+  511	find . -ctime -1 
+  512	find . -ctime -0 
+  513	cd test 
+  514	ls 
+  515	find . -ctime -1 a 
+  516	find . -ctime -0 a 
