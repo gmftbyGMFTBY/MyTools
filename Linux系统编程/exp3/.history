@@ -622,3 +622,17 @@
   622	ls 
   623	ls 
   624	ls 
+  625	cd test 
+  626	ls 
+  627	du  
+  628	du -BK . 
+  629	ls 
+  630	find lantian 
+  631	find . lantian 
+  632	find . -name lantian 
+  633	find . -name fuck 
+  634	find . -name .?.txt 
+  635	ls 
+  636	tree 
+  637	j a 
+  638	ls 

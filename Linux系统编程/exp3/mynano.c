@@ -394,6 +394,8 @@ void save_file(int fd, char *read_buffer, char (*origin_buffer)[BUFFER_SIZE]){
 		printw("File saved successfully\n");
 	refresh();
 }
+
+
 WINDOW *indicate_window(char *msg, WINDOW* stdscr){
 	WINDOW *local_window;
 	int x, y;
