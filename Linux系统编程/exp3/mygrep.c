@@ -9,6 +9,7 @@
 #include"mygrep.h"
 
 void format_out_grep(char *string, position *all_position, int line_count, int n_flag, int c_flag){
+	/* 根据参数格式化输出结果 */
 	if(n_flag == 1)
 		printf("%d:", line_count);
 	if(c_flag == 1)
@@ -16,7 +17,7 @@ void format_out_grep(char *string, position *all_position, int line_count, int n
 	else
 		printf("%s", string);
 }
-
+/* 根据输入字符串产生用于匹配的preg */
 regex_t* preg_gen(char *buffer, int E_flag, int i_flag){
 	static regex_t preg;
 	int error_code = 0;
@@ -28,6 +29,7 @@ regex_t* preg_gen(char *buffer, int E_flag, int i_flag){
 	}
 	return &preg;
 }
+/* 将字符串和此前产生的preg匹配 */
 regmatch_t* mygrep(char *regular, char *string, int E_flag, int i_flag){
 	regex_t *preg = preg_gen(regular, E_flag, i_flag);
 	static regmatch_t pmatch[NMATCH];
@@ -37,6 +39,7 @@ regmatch_t* mygrep(char *regular, char *string, int E_flag, int i_flag){
 	}
 	return pmatch;
 }
+/* 此函数为接口，可供其他函数调用，用于判断是否匹配 */
 int16_t is_matched(char *regular, char *string, int E_flag, int i_flag){
 	regmatch_t *match = mygrep(regular, string, E_flag, i_flag);
 	if(!(match == NULL))
@@ -44,6 +47,7 @@ int16_t is_matched(char *regular, char *string, int E_flag, int i_flag){
 	else
 		return 0;
 }
+/* 找出字符串中所有匹配的子串的位置 */
 void find_all_match(char *regular, char *string, position* all_position, int E_flag, int i_flag){
 
 	regmatch_t *match = mygrep(regular, string, E_flag, i_flag);
@@ -77,6 +81,7 @@ void find_all_match(char *regular, char *string, position* all_position, int E_f
 	}
 	return;
 }
+/* 打印字符串中所有匹配的子串 */
 void print_matched(const char *string, const position *all_position){
 	/* 根据all_position中的信息打印字符串中匹配的字串 */
 	int count = 0;
@@ -127,10 +132,22 @@ void init_struct(position* pos, int size){
 		(pos + i)->end = END_IDEN;
 	}
 }
+
 void grep(int argc, char *argv[]){
+	/* 用法 grep [选项] ... PATTERN [FILE]...*/
+	/* 在每个FILE或是标准输入中查找PATTER */
+	/* 选项
+	-E 使用扩展的正则表达式 
+	-G 使用基本的正则表达式
+	-e 显示知名PATTERN
+	-i 在匹配时忽略大小写
+	-n 匹配文件时指出匹配的行号
+	-c 使用标记高亮匹配字符串
+	-h 显示帮助信息
+	*/
     argv[argc] = NULL;
 	int opt;
-	int E_flag = 0, G_flag = 0, e_flag = 0, i_flag = 0, n_flag = 0, c_flag = 0;
+	int E_flag = 0, G_flag = 0, e_flag = 0, i_flag = 0, n_flag = 0, c_flag = 0, h_flag = 0;
 	int line_count = 0;
 	char file_name[MAX_SIZE];
 	char pattern[MAX_SIZE];
@@ -141,13 +158,7 @@ void grep(int argc, char *argv[]){
 	/* 初始化 */
 	memset(file_name, 0, MAX_SIZE);
 	memset(pattern, 0, MAX_SIZE);
-	while ((opt = getopt(argc, argv, "EGf:e:inc-")) != -1)
-		/* -E 表示使用扩展的匹配方法 */
-		/* -G表示采用基础的匹配方法,默认使用基础匹配方法 */
-		/* -e 指定 pattern */
-		/* -i 忽略大小写 */
-		/* -n 显示行号 */
-		/* -c 在匹配出用绿色标记 */
+	while ((opt = getopt(argc, argv, "EGf:e:inhc-")) != -1){
 		switch (opt)
 		{
 		case 'E':
@@ -173,11 +184,20 @@ void grep(int argc, char *argv[]){
 		case 'c':
 			c_flag = 1;
 			break;
+		case 'h':
+			h_flag = 1;
+			break;
 		default:
-			printf("Usage grep [option]  pattern file where option is EGfein\n");
+			printf("Usage grep [option]  pattern file where option is -EGfeinh\n");
 			return;
 			break;
 		}
+	}
+	if(h_flag == 1){
+		printf("grep searches the named input files for lines containing a match to the given pattern.\n"
+		       "For more detail information, please refer to manual.\n");
+		return;
+	}
 	if(e_flag != 1){
 		/* 说明没有-e 参数 */
 		if(argv[optind] == NULL){

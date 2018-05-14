@@ -20,4 +20,5 @@ int16_t is_matched(char *regular, char *string, int E_flag, int i_flag);
 void find_all_match(char *regular, char *string, position*, int E_flag, int i_flag);
 void print_matched(const char *string, const position*);
 void grep(int argc, char *argv[]);
+
 #endif

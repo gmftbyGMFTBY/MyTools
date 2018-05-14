@@ -52,7 +52,7 @@ void format_out(long long int size, long long int block_number, int b_flag, int 
 	else if(t_flag == 1){
 		printf("%lldT\t%s\n", (((folder_size / 1024) / 1024) / 1024) / 1024 + 1, relative_path);
 	}
-	/* default format is k_flag */
+	/* 默认打印所占512b大小的磁盘块数 */
 	else{
 		printf("%lld\t%s\n", block_number, relative_path);
 	}
@@ -71,7 +71,7 @@ usage*  mydu(char *pathname)
 		return ERROR;
 	}
 	while((dp = readdir(dirp)) != NULL){
-		/* ! If no flag */
+		/* 读取文件夹中的每个文件 */
 		char relative_path[MAX_SIZE];
 		strncpy(relative_path, pathname, MAX_SIZE);
 		strcat(relative_path, "/");
@@ -84,7 +84,8 @@ usage*  mydu(char *pathname)
 		block_size = buffer.st_blksize;
 		if ((buffer.st_mode & __S_IFMT) == __S_IFDIR)
 		{
-			/* Don't take hidden folder into consideration */
+			/* 在计算文件夹所占大小时，不能考虑隐藏文件夹.和.. */
+			/* 如果考虑.则会导致无限递归，如果考虑..则计算无意义 */
 			if((!strcmp(dp->d_name, ".")) || (!strcmp(dp->d_name, ".."))){
 			}
 			else{
@@ -98,7 +99,6 @@ usage*  mydu(char *pathname)
 			}
 		}
 		/* 处理普通文件 */
-		/* reg means regular */
 		else if((buffer.st_mode & __S_IFMT) == __S_IFREG){
 			total_size += buffer.st_size;
 			block_number += buffer.st_blocks;
@@ -116,6 +116,13 @@ usage*  mydu(char *pathname)
 
 int du(int argc, char *argv[])
 {
+	/* 用法 du [选项] [文件夹]，省略文件夹名称则表示当前文件夹 */
+	/* 读取文件夹所占磁盘块大小 */
+	/* 选项：
+	-h 打印帮助信息
+	-a 打印文件夹和文件夹下所有文件所占磁盘块大小
+	-B 后面接具体单位，指示打印的单位（如 -B M 指示数值的单位为M)，可接的单位为K，M，G，T
+	*/
     argv[argc] = NULL;
 	int opt;
 	char pathname[MAX_SIZE];
@@ -124,7 +131,6 @@ int du(int argc, char *argv[])
 	blkcnt_t block_number_in_k;
 	while ((opt = getopt(argc, argv, "ahB:b")) != -1)
 	{
-        printf("%c\n", opt);
 		switch(opt){
 			case 'B':
 				if(!strcmp("K", optarg))
@@ -145,7 +151,7 @@ int du(int argc, char *argv[])
 				aflag = 1;
 				break;
 			case 'h':
-				humanflag = 1;
+				helpflag = 1;
 				break;
 			case 'b':
 				size_b_flag = 1;
@@ -156,11 +162,11 @@ int du(int argc, char *argv[])
 	    }
 	}
 	if(helpflag == 1){
-		printf("print help information\n");
+		printf("estimate file space usage\n"
+		"For more detail information, please refer to manual.\n");
 		return SUCCESS;
 	}
 	if(argv[optind] == NULL){
-		/* mydu current directory */
 		/* 不仅计算文件夹中文件占用的磁盘数，也计算文件夹所占大小 */
 		folder_usage = mydu(".");
 		block_number_in_k = cacl_block(block_size, folder_usage->block_number) + block_size / 1024;

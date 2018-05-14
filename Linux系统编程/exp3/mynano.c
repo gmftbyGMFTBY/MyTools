@@ -28,16 +28,27 @@ WINDOW *indicate_window(char *msg, WINDOW*);
 
 char file_pathname[PATH_LEN];
 int line_count = 0, row_count = 0;
-/* nano 程序功能 */
 void nano(int argc, char *argv[])
 {	
+	/* 基于ncurses库实现基本的文本编辑功能 */
+	/* 通过鼠标或者键盘移动光标，实现在文本的指定处插入数据 */
+	/* 选项
+	-h 打印帮助信息
+	*/
+	/* 在编辑界面中通过^X(control+X)退出程序 */
 	if (argc == 1)
 	{
 		printf("Please indicate a file to open\n");
 		return;
 	}
 	if(argc > 2){
-		printf("Useage: nano file\n");
+		printf("Useage: nano File or nano -h\n");
+		return;
+	}
+	if(!strcmp(argv[1],"-h")){
+		printf("`nano` is a small editor.\n"
+		       "You can use ^X(control+ X) to exit the program。\n"
+		       "For more detail information, please refer to manual\n");
 		return;
 	}
 	strncpy(file_pathname, argv[1], PATH_LEN);

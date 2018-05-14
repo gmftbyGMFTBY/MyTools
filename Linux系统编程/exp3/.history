@@ -636,3 +636,41 @@
   636	tree 
   637	j a 
   638	ls 
+  639	ls 
+  640	nano -h 
+  641	nano -h 
+  642	ls 
+  643	nano -h 
+  644	ls 
+  645	grep -h 
+  646	du -h 
+  647	ls 
+  648	du -h 
+  649	du -h 
+  650	du -h 
+  651	du -h 
+  652	ls 
+  653	du -h 
+  654	ls 
+  655	ls 
+  656	ls 
+  657	cd test 
+  658	ls 
+  659	touch 1 
+  660	nano 1 
+  661	ls 
+  662	cat 1 
+  663	ls 
+  664	nano 2 
+  665	ls 
+  666	ls 
+  667	gcc --version 
+  668	ls 
+  669	ls 
+  670	mv 1 1.c 
+  671	ls 
+  672	cat 1.c 
+  673	gcc 1.c 
+  674	ls 
+  675	./a.out 
+  676	ls 
