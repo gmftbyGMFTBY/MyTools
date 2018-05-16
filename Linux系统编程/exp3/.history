@@ -674,3 +674,124 @@
   674	ls 
   675	./a.out 
   676	ls 
+  677	ls 
+  678	cd test 
+  679	ls 
+  680	cat 1.c | cat 
+  681	cat 1.c | cat | cat | cat | cat > 2.c 
+  682	ls 
+  683	nano 2.c 
+  684	ls 
+  685	rm 2.c 
+  686	ls 
+  687	ls 
+  688	ls 
+  689	cd test 
+  690	ls 
+  691	grep . "1?.c 
+  692	ls 
+  693	cd test 
+  694	ls 
+  695	ls 
+  696	cd test 
+  697	ls 
+  698	ls 
+  699	cd test 
+  700	ls 
+  701	grep return 1.c 
+  702	grep -c return 1.c 
+  703	grep -n return 1.c 
+  704	ls 
+  705	cd test 
+  706	ls 
+  707	grep main 1.c 
+  708	grep main ./* 
+  709	find returm 
+  710	find a.out  
+  711	find a.out . 
+  712	ls 
+  713	find -name a.out  
+  714	find -name "a.out" . 
+  715	ls 
+  716	find -name a.out 
+  717	ls 
+  718	find -name 1.c 
+  719	ls 
+  720	cd . 
+  721	cd .. 
+  722	ls 
+  723	find -name 1.c test 
+  724	ls 
+  725	ls 
+  726	ls 
+  727	ls 
+  728	find test -name 1.c 
+  729	find test -ctime 
+  730	find test -ctime 2 
+  731	find test -ctime -2 
+  732	find test -ctime -10 
+  733	find test -prune 1.c 
+  734	find test -prune 1?.c 
+  735	tree test 
+  736	find test -name .?.txt 
+  737	ls 
+  738	cd test 
+  739	ls 
+  740	nano 2 
+  741	ls 
+  742	nano 2 
+  743	ls 
+  744	cat 2 
+  745	echo } >> 2 
+  746	cat 2 
+  747	ls 
+  748	cat 2 | echo 
+  749	cat 2 | echo > 3 
+  750	ls 
+  751	cat 3 
+  752	cat 2 
+  753	ls 
+  754	rm 2 
+  755	ls 
+  756	rm 3 
+  757	rm 3 
+  758	ls 
+  759	rm a.out 
+  760	ls 
+  761	cat 1.c 
+  762	ls 
+  763	ls 
+  764	cat 1.c  
+  765	cat 1.c | cat  
+  766	cat 1.c | cat | cat | cat > 4 
+  767	ls 
+  768	cat 4 
+  769	ls 
+  770	cat 1.c | cat | cat | cat | cat > 2 > 3 > 4 
+  771	ls 
+  772	cat 2 3 4 
+  773	diff --version 
+  774	ls 
+  775	mkdir test 
+  776	ls 
+  777	tree . 
+  778	find . -ctime -1 
+  779	find . -ctime 1 
+  780	find . -name lantian 
+  781	ls 
+  782	find .. -name lantian 
+  783	cd .. 
+  784	ls 
+  785	find test -name lantian 
+  786	find test -name lan.* 
+  787	find test -print 
+  788	find test -print lantian 
+  789	find test -name 1.txt 
+  790	find -h 
+  791	find test 
+  792	ls 
+  793	find test -name lantian 
+  794	find test -name 1.txt 
+  795	find test -name .{1}.txt 
+  796	history 
+  797	ls 
